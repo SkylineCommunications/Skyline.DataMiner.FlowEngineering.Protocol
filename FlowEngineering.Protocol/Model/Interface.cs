@@ -33,21 +33,31 @@
 		public int DcfInterfaceId { get; set; }
 
 		public double RxBitrate { get; set; }
+
 		public double RxUtilization { get; set; }
+
 		public double RxExpectedBitrate { get; internal set; }
+
 		public ExpectedStatus RxExpectedBitrateStatus => Tools.CalculateExpectedBitrateStatus(RxBitrate, RxExpectedBitrate);
 
 		public int RxFlows { get; set; }
+
 		public int RxExpectedFlows { get; internal set; }
+
 		public ExpectedStatus RxExpectedFlowsStatus => Tools.CalculateExpectedStatus(RxFlows, RxExpectedFlows);
 
 		public double TxBitrate { get; set; }
+
 		public double TxUtilization { get; set; }
+
 		public double TxExpectedBitrate { get; internal set; }
+
 		public ExpectedStatus TxExpectedBitrateStatus => Tools.CalculateExpectedBitrateStatus(TxBitrate, TxExpectedBitrate);
 
 		public int TxFlows { get; set; }
+
 		public int TxExpectedFlows { get; internal set; }
+
 		public ExpectedStatus TxExpectedFlowsStatus => Tools.CalculateExpectedStatus(TxFlows, TxExpectedFlows);
 
 		public void SetStatus(SLProtocol protocol, InterfaceAdminStatus adminStatus, InterfaceOperationalStatus operStatus)

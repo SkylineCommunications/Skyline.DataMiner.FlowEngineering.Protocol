@@ -153,8 +153,7 @@
 							FlowOwner = (FlowOwner)owner,
 							IsPresent = Convert.ToBoolean(present),
 						};
-					}
-				);
+					});
 
 			foreach (var row in table)
 			{

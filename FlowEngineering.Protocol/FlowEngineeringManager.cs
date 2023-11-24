@@ -16,13 +16,13 @@
 			OutgoingFlows = new TxFlows(this);
 		}
 
-		public static FlowEngineeringManager GetInstance(SLProtocol protocol) => FlowEngineeringManagerInstances.GetInstance(protocol);
-
 		public Interfaces Interfaces { get; }
 
 		public RxFlows IncomingFlows { get; }
 
 		public TxFlows OutgoingFlows { get; }
+
+		public static FlowEngineeringManager GetInstance(SLProtocol protocol) => FlowEngineeringManagerInstances.GetInstance(protocol);
 
 		public void LoadTables(SLProtocol protocol)
 		{
