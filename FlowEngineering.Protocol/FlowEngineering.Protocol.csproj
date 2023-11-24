@@ -7,6 +7,7 @@
 		<CodeAnalysisRuleSet>..\Internal\Code Analysis\debug.ruleset</CodeAnalysisRuleSet>
 		<RootNamespace>Skyline.DataMiner.FlowEngineering.Protocol</RootNamespace>
 		<AssemblyName>Skyline.DataMiner.FlowEngineering.Protocol</AssemblyName>
+		<PackageId>Skyline.DataMiner.FlowEngineering.Protocol</PackageId>
 		<PackageTags>Skyline;DataMiner</PackageTags>
 		<PackageProjectUrl>https://skyline.be</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
