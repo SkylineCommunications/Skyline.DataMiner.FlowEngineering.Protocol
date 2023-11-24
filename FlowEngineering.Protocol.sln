@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34316.72
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Internal", "Internal", "{5E4E23D1-E461-45CF-AE14-065743894A1C}"
+	ProjectSection(SolutionItems) = preProject
+		Internal\.editorconfig = Internal\.editorconfig
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code Analysis", "Code Analysis", "{CAD38E2F-4880-4B57-B728-CC014FDD2C2C}"
+	ProjectSection(SolutionItems) = preProject
+		Internal\Code Analysis\debug.ruleset = Internal\Code Analysis\debug.ruleset
+		Internal\Code Analysis\release.ruleset = Internal\Code Analysis\release.ruleset
+		Internal\Code Analysis\stylecop.json = Internal\Code Analysis\stylecop.json
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowEngineering.Protocol", "FlowEngineering.Protocol\FlowEngineering.Protocol.csproj", "{6699688D-1CEE-4914-B6F8-EB39C94FEFDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6699688D-1CEE-4914-B6F8-EB39C94FEFDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6699688D-1CEE-4914-B6F8-EB39C94FEFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6699688D-1CEE-4914-B6F8-EB39C94FEFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6699688D-1CEE-4914-B6F8-EB39C94FEFDE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CAD38E2F-4880-4B57-B728-CC014FDD2C2C} = {5E4E23D1-E461-45CF-AE14-065743894A1C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7268BF1-1CB5-48C3-B24E-B2FB5CCD19F7}
+	EndGlobalSection
+EndGlobal
