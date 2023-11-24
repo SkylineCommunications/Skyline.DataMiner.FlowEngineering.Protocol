@@ -20,6 +20,8 @@
 		<Authors>SkylineCommunications</Authors>
 		<Company>Skyline Communications</Company>
 		<Description>Provides classes that can help filling in the generic flow engineering tables in a DataMiner connector.</Description>
+		<RepositoryUrl>https://github.com/SkylineCommunications/Skyline.DataMiner.FlowEngineering.Protocol</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Skyline.DataMiner.ConnectorAPI.FlowEngineering" Version="0.0.4" />
