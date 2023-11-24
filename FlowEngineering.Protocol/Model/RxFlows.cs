@@ -130,7 +130,7 @@
 						Parameter.Fleincomingflowstable.Idx.fleincomingflowstableflowowner,
 						Parameter.Fleincomingflowstable.Idx.fleincomingflowstablepresent,
 					},
-					(string idx, string dest, int destPort, string source, string intf, int type, double bitrate, double expectedBitrate, string label, string fkOut, string linked, int owner, int present) =>
+					(string idx, string dest, int destPort, string source, string intf, int type, double bitrate, double expectedBitrate, string label, string fk, string linked, int owner, int present) =>
 					{
 						return new
 						{
@@ -143,7 +143,7 @@
 							Bitrate = bitrate,
 							ExpectedBitrate = expectedBitrate,
 							Label = label,
-							FkOutgoing = fkOut,
+							FkOutgoing = fk,
 							LinkedFlow = linked,
 							FlowOwner = (FlowOwner)owner,
 							IsPresent = Convert.ToBoolean(present),
