@@ -4,7 +4,7 @@
 
 Provides classes that can help filling in the generic flow engineering tables in a DataMiner connector.
 
-Example connector: https://github.com/SkylineCommunications/SLC-C-Example_FlowEngineering.
+Documentation + example connector: https://github.com/SkylineCommunications/SLC-C-Example_FlowEngineering.
 
 ### About DataMiner
 
