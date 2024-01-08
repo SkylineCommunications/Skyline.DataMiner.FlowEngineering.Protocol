@@ -1,4 +1,4 @@
-# Skyline.DataMiner.ConnectorAPI.FlowEngineering
+# Skyline.DataMiner.FlowEngineering.Protocol
 
 ## About
 
