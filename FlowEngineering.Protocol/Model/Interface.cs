@@ -60,6 +60,11 @@
 
 		public ExpectedStatus TxExpectedFlowsStatus => Tools.CalculateExpectedStatus(TxFlows, TxExpectedFlows);
 
+		/// <summary>
+		/// Gets or sets the additional data associated with this object.
+		/// </summary>
+		public object Tag { get; set; }
+
 		public void SetStatus(SLProtocol protocol, InterfaceAdminStatus adminStatus, InterfaceOperationalStatus operStatus)
 		{
 			AdminStatus = adminStatus;
