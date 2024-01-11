@@ -4,9 +4,10 @@
 	using System.Collections.Generic;
 	using System.Linq;
 
+	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
 	using Skyline.DataMiner.Core.DataMinerSystem.Protocol;
 	using Skyline.DataMiner.FlowEngineering.Protocol;
-	using Skyline.DataMiner.FlowEngineering.Protocol.DCF;
+	using Skyline.DataMiner.FlowEngineering.Protocol.Exceptions;
 	using Skyline.DataMiner.Scripting;
 
 	public class TxFlows : Flows<TxFlow>
@@ -31,87 +32,80 @@
 			return flow;
 		}
 
-		public override TxFlow RegisterFlowEngineeringFlow(ConnectorAPI.FlowEngineering.Info.FlowInfoMessage flowInfo, bool ignoreDestinationPort = false)
+		public override TxFlow RegisterFlowEngineeringFlow(FlowInfoMessage flowInfo, string instance, bool ignoreDestinationPort = false)
 		{
 			if (flowInfo == null)
 			{
 				throw new ArgumentNullException(nameof(flowInfo));
 			}
 
-			var ip = flowInfo.IpConfiguration;
-			if (ip == null)
+			if (String.IsNullOrWhiteSpace(instance))
 			{
-				throw new NotSupportedException("Only IP flows are supported");
+				throw new ArgumentException($"'{nameof(instance)}' cannot be null or whitespace.", nameof(instance));
 			}
 
-			if (!DcfDynamicLink.TryParse(flowInfo.OutgoingDcfDynamicLink, out var dcfDynamicLink))
+			if (!_manager.Interfaces.TryGetByDcfInterfaceID(flowInfo.OutgoingDcfInterfaceID, out var outgoingIntf) &&
+				!_manager.Interfaces.TryGetByDcfDynamicLink(flowInfo.OutgoingDcfDynamicLink, out outgoingIntf))
 			{
-				throw new ArgumentException("Couldn't parse DCF dynamic link");
+				throw new DcfInterfaceNotFoundException($"Couldn't find outgoing DCF interface with ID '{flowInfo.OutgoingDcfInterfaceID}' and link '{flowInfo.OutgoingDcfDynamicLink}'");
 			}
-
-			var instance = !ignoreDestinationPort
-				? String.Join("/", ip.SourceIP, $"{ip.DestinationIP}:{ip.DestinationPort}", dcfDynamicLink.PK)
-				: String.Join("/", ip.SourceIP, ip.DestinationIP, dcfDynamicLink.PK);
 
 			if (!TryGetValue(instance, out var flow))
 			{
-				flow = new TxFlow(instance)
-				{
-					SourceIP = ip.SourceIP,
-					DestinationIP = ip.DestinationIP,
-					DestinationPort = !ignoreDestinationPort ? Convert.ToInt32(ip.DestinationPort) : -1,
-					TransportType = FlowTransportType.IP,
-				};
+				flow = new TxFlow(instance);
 				Add(flow);
+			}
+
+			var ip = flowInfo.IpConfiguration;
+			if (ip != null)
+			{
+				flow.SourceIP = ip.SourceIP;
+				flow.DestinationIP = ip.DestinationIP;
+				flow.DestinationPort = !ignoreDestinationPort ? Convert.ToInt32(ip.DestinationPort) : -1;
+				flow.TransportType = FlowTransportType.IP;
+			}
+			else
+			{
+				flow.SourceIP = String.Empty;
+				flow.DestinationIP = String.Empty;
+				flow.DestinationPort = -1;
 			}
 
 			flow.FlowOwner = FlowOwner.FlowEngineering;
 			flow.LinkedFlow = Convert.ToString(flowInfo.ProvisionedFlowId);
-			flow.OutgoingInterface = dcfDynamicLink.PK;
-			flow.ExpectedBitrate = flowInfo.GetBitrate();
+			flow.OutgoingInterface = outgoingIntf.Index;
+			flow.ExpectedBitrate = flowInfo.TryGetBitrate(out var bitrate) ? bitrate : -1;
 
 			return flow;
 		}
 
-		public override TxFlow UnregisterFlowEngineeringFlow(ConnectorAPI.FlowEngineering.Info.FlowInfoMessage flowInfo, bool ignoreDestinationPort = false)
+		public override TxFlow UnregisterFlowEngineeringFlow(FlowInfoMessage flowInfo)
 		{
 			if (flowInfo == null)
 			{
 				throw new ArgumentNullException(nameof(flowInfo));
 			}
 
-			var ip = flowInfo.IpConfiguration;
-			if (ip == null)
+			var provisionedFlowId = Convert.ToString(flowInfo.ProvisionedFlowId);
+			var linkedFlow = Values.FirstOrDefault(x => String.Equals(x.LinkedFlow, provisionedFlowId));
+
+			if (linkedFlow == null)
 			{
-				throw new NotSupportedException("Only IP flows are supported");
+				throw new ArgumentException($"Couldn't find outgoing flow with provisioned flow ID '{provisionedFlowId}'");
 			}
 
-			if (!DcfDynamicLink.TryParse(flowInfo.OutgoingDcfDynamicLink, out var dcfDynamicLink))
+			if (linkedFlow.IsPresent)
 			{
-				throw new ArgumentException("Couldn't parse DCF dynamic link");
-			}
-
-			var instance = !ignoreDestinationPort
-				? String.Join("/", ip.SourceIP, $"{ip.DestinationIP}:{ip.DestinationPort}", dcfDynamicLink.PK)
-				: String.Join("/", ip.SourceIP, ip.DestinationIP, dcfDynamicLink.PK);
-
-			if (!TryGetValue(instance, out var flow))
-			{
-				return null;
-			}
-
-			if (flow.IsPresent)
-			{
-				flow.FlowOwner = FlowOwner.LocalSystem;
-				flow.LinkedFlow = String.Empty;
-				flow.ExpectedBitrate = -1;
+				linkedFlow.FlowOwner = FlowOwner.LocalSystem;
+				linkedFlow.LinkedFlow = String.Empty;
+				linkedFlow.ExpectedBitrate = -1;
 			}
 			else
 			{
-				Remove(instance);
+				Remove(linkedFlow);
 			}
 
-			return flow;
+			return linkedFlow;
 		}
 
 		public override void LoadTable(SLProtocol protocol)

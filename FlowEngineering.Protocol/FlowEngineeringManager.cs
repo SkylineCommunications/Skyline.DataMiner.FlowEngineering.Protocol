@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 
 	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Enums;
+	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
 	using Skyline.DataMiner.FlowEngineering.Protocol.Model;
 	using Skyline.DataMiner.Scripting;
 
@@ -27,6 +28,8 @@
 		public void LoadTables(SLProtocol protocol)
 		{
 			Interfaces.LoadTable(protocol);
+			Interfaces.LoadDcfDynamicLinks(protocol);
+
 			IncomingFlows.LoadTable(protocol);
 			OutgoingFlows.LoadTable(protocol);
 		}
@@ -50,7 +53,7 @@
 			OutgoingFlows.UpdateTable(protocol, includeStatistics);
 		}
 
-		public (ICollection<Flow> addedFlows, ICollection<Flow> removedFlows) HandleInterAppMessage(SLProtocol protocol, ConnectorAPI.FlowEngineering.Info.FlowInfoMessage message, bool ignoreDestinationPort = false)
+		public (ICollection<Flow> addedFlows, ICollection<Flow> removedFlows) HandleInterAppMessage(SLProtocol protocol, FlowInfoMessage message, string flowInstance, bool ignoreDestinationPort = false)
 		{
 			if (protocol == null)
 			{
@@ -70,14 +73,14 @@
 				case ActionType.Create:
 					if (message.IsIncoming)
 					{
-						var flow = IncomingFlows.RegisterFlowEngineeringFlow(message, ignoreDestinationPort);
+						var flow = IncomingFlows.RegisterFlowEngineeringFlow(message, flowInstance, ignoreDestinationPort);
 
 						if (flow != null)
 							addedFlows.Add(flow);
 					}
 					else
 					{
-						var flow = OutgoingFlows.RegisterFlowEngineeringFlow(message, ignoreDestinationPort);
+						var flow = OutgoingFlows.RegisterFlowEngineeringFlow(message, flowInstance, ignoreDestinationPort);
 
 						if (flow != null)
 							addedFlows.Add(flow);
@@ -88,14 +91,14 @@
 				case ActionType.Delete:
 					if (message.IsIncoming)
 					{
-						var flow = IncomingFlows.UnregisterFlowEngineeringFlow(message, ignoreDestinationPort);
+						var flow = IncomingFlows.UnregisterFlowEngineeringFlow(message);
 
 						if (flow != null)
 							removedFlows.Add(flow);
 					}
 					else
 					{
-						var flow = OutgoingFlows.UnregisterFlowEngineeringFlow(message, ignoreDestinationPort);
+						var flow = OutgoingFlows.UnregisterFlowEngineeringFlow(message);
 
 						if (flow != null)
 							removedFlows.Add(flow);

@@ -9,11 +9,11 @@
 
 	public class DcfInterfaceHelper
 	{
-		private readonly Dictionary<int, DcfInterface> _interfaces = new Dictionary<int, DcfInterface>();
-
 		private DcfInterfaceHelper()
 		{
 		}
+
+		internal Dictionary<int, DcfInterface> Interfaces { get; } = new Dictionary<int, DcfInterface>();
 
 		public static DcfInterfaceHelper Create(SLProtocol protocol)
 		{
@@ -38,7 +38,7 @@
 
 			foreach (var intf in intfs)
 			{
-				helper._interfaces.Add(intf.ID, intf);
+				helper.Interfaces.Add(intf.ID, intf);
 			}
 
 			return helper;
@@ -46,12 +46,12 @@
 
 		public bool TryFindInterface(int groupId, out DcfInterface dcfInterface)
 		{
-			return _interfaces.TryGetValue(groupId, out dcfInterface);
+			return Interfaces.TryGetValue(groupId, out dcfInterface);
 		}
 
 		public bool TryFindInterface(int groupId, string dynamicPk, out DcfInterface dcfInterface)
 		{
-			foreach (var intf in _interfaces.Values)
+			foreach (var intf in Interfaces.Values)
 			{
 				if (DcfDynamicLink.TryParse(intf.DynamicLink, out var dynamicLink)
 					&& dynamicLink.GroupID == groupId

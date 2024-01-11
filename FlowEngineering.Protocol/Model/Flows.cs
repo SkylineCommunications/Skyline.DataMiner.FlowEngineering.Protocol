@@ -5,6 +5,7 @@
 
 	using Skyline.DataMiner.FlowEngineering.Protocol;
 	using Skyline.DataMiner.Scripting;
+	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
 
 	public abstract class Flows<T> : Dictionary<string, T>
 		where T : Flow
@@ -39,8 +40,23 @@
 			}
 		}
 
+		public bool Remove(T flow)
+		{
+			if (flow == null)
+			{
+				throw new ArgumentNullException(nameof(flow));
+			}
+
+			return Remove(flow.Instance);
+		}
+
 		public void ReplaceFlows(IEnumerable<T> newFlows)
 		{
+			if (newFlows == null)
+			{
+				throw new ArgumentNullException(nameof(newFlows));
+			}
+
 			Clear();
 			AddRange(newFlows);
 		}
@@ -51,8 +67,8 @@
 
 		public abstract void UpdateStatistics(SLProtocol protocol);
 
-		public abstract T RegisterFlowEngineeringFlow(ConnectorAPI.FlowEngineering.Info.FlowInfoMessage flowInfo, bool ignoreDestinationPort = false);
+		public abstract T RegisterFlowEngineeringFlow(FlowInfoMessage flowInfo, string instance, bool ignoreDestinationPort = false);
 
-		public abstract T UnregisterFlowEngineeringFlow(ConnectorAPI.FlowEngineering.Info.FlowInfoMessage flowInfo, bool ignoreDestinationPort = false);
+		public abstract T UnregisterFlowEngineeringFlow(FlowInfoMessage flowInfo);
 	}
 }

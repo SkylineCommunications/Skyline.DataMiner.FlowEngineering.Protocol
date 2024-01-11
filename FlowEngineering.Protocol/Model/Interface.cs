@@ -20,6 +20,11 @@
 
 		public string Index { get; }
 
+		/// <summary>
+		/// Gets the instance of this interface. This is an alias for <see cref="Index" />.
+		/// </summary>
+		public string Instance => Index;
+
 		public string Description { get; set; }
 
 		public string DisplayKey { get; set; }
@@ -31,6 +36,8 @@
 		public InterfaceOperationalStatus OperationalStatus { get; set; }
 
 		public int DcfInterfaceId { get; set; }
+
+		public string DcfDynamicLink { get; internal set; }
 
 		public double RxBitrate { get; set; }
 

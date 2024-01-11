@@ -6,6 +6,7 @@
 
 	using Skyline.DataMiner.Core.DataMinerSystem.Protocol;
 	using Skyline.DataMiner.FlowEngineering.Protocol;
+	using Skyline.DataMiner.FlowEngineering.Protocol.DCF;
 	using Skyline.DataMiner.Scripting;
 
 	public class Interfaces : Dictionary<string, Interface>
@@ -58,13 +59,35 @@
 
 		public void ReplaceInterfaces(IEnumerable<Interface> newInterfaces)
 		{
+			if (newInterfaces == null)
+			{
+				throw new ArgumentNullException(nameof(newInterfaces));
+			}
+
 			Clear();
 			AddRange(newInterfaces);
 		}
 
 		public bool TryGetByDescription(string description, out Interface intf)
 		{
+			if (description == null)
+			{
+				throw new ArgumentNullException(nameof(description));
+			}
+
 			intf = Values.FirstOrDefault(x => String.Equals(x.Description, description));
+			return intf != null;
+		}
+
+		public bool TryGetByDcfInterfaceID(int dcfInterfaceId, out Interface intf)
+		{
+			intf = Values.FirstOrDefault(x => Equals(x.DcfInterfaceId, dcfInterfaceId));
+			return intf != null;
+		}
+
+		public bool TryGetByDcfDynamicLink(string dcfDynamicLink, out Interface intf)
+		{
+			intf = Values.FirstOrDefault(x => String.Equals(x.DcfDynamicLink, dcfDynamicLink));
 			return intf != null;
 		}
 
@@ -123,6 +146,19 @@
 				intf.TxBitrate = row.TxBitrate;
 				intf.TxFlows = row.TxFlows;
 				intf.DcfInterfaceId = row.DcfInterfaceId;
+			}
+		}
+
+		public void LoadDcfDynamicLinks(SLProtocol protocol)
+		{
+			var dcfHelper = DcfInterfaceHelper.Create(protocol);
+
+			foreach (var intf in this.Values)
+			{
+				if (dcfHelper.Interfaces.TryGetValue(intf.DcfInterfaceId, out var dcfIntf))
+				{
+					intf.DcfDynamicLink = dcfIntf.DynamicLink;
+				}
 			}
 		}
 

@@ -7,7 +7,7 @@
 
 	public static class FlowInfoMessageExtensions
 	{
-		public static double GetBitrate(this FlowInfoMessage message)
+		public static bool TryGetBitrate(this FlowInfoMessage message, out double bitrate)
 		{
 			if (message == null)
 			{
@@ -16,12 +16,13 @@
 
 			if (message.Metadata != null &&
 				message.Metadata.TryGetValue("Bitrate", out string strBitrate) &&
-				Double.TryParse(strBitrate, NumberStyles.Any, CultureInfo.InvariantCulture, out var bitrate))
+				Double.TryParse(strBitrate, NumberStyles.Any, CultureInfo.InvariantCulture, out bitrate))
 			{
-				return bitrate;
+				return true;
 			}
 
-			return -1;
+			bitrate = default;
+			return false;
 		}
 	}
 }

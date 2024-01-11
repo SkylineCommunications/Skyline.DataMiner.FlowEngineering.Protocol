@@ -4,9 +4,10 @@
 	using System.Collections.Generic;
 	using System.Linq;
 
+	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
 	using Skyline.DataMiner.Core.DataMinerSystem.Protocol;
 	using Skyline.DataMiner.FlowEngineering.Protocol;
-	using Skyline.DataMiner.FlowEngineering.Protocol.DCF;
+	using Skyline.DataMiner.FlowEngineering.Protocol.Exceptions;
 	using Skyline.DataMiner.Scripting;
 
 	public class RxFlows : Flows<RxFlow>
@@ -31,82 +32,80 @@
 			return flow;
 		}
 
-		public override RxFlow RegisterFlowEngineeringFlow(ConnectorAPI.FlowEngineering.Info.FlowInfoMessage flowInfo, bool ignoreDestinationPort = false)
+		public override RxFlow RegisterFlowEngineeringFlow(FlowInfoMessage flowInfo, string instance, bool ignoreDestinationPort = false)
 		{
 			if (flowInfo == null)
 			{
 				throw new ArgumentNullException(nameof(flowInfo));
 			}
 
-			var ip = flowInfo.IpConfiguration;
-			if (ip == null)
+			if (String.IsNullOrWhiteSpace(instance))
 			{
-				throw new NotSupportedException("Only IP flows are supported");
+				throw new ArgumentException($"'{nameof(instance)}' cannot be null or whitespace.", nameof(instance));
 			}
 
-			if (!DcfDynamicLink.TryParse(flowInfo.IncomingDcfDynamicLink, out var dcfDynamicLink))
+			if (!_manager.Interfaces.TryGetByDcfInterfaceID(flowInfo.IncomingDcfInterfaceID, out var incomingIntf) &&
+				!_manager.Interfaces.TryGetByDcfDynamicLink(flowInfo.IncomingDcfDynamicLink, out incomingIntf))
 			{
-				throw new ArgumentException("Couldn't parse DCF dynamic link");
+				throw new DcfInterfaceNotFoundException($"Couldn't find incoming DCF interface with ID '{flowInfo.IncomingDcfInterfaceID}' and link '{flowInfo.IncomingDcfDynamicLink}'");
 			}
-
-			var instance = !ignoreDestinationPort
-				? String.Join("/", ip.SourceIP, $"{ip.DestinationIP}:{ip.DestinationPort}")
-				: String.Join("/", ip.SourceIP, ip.DestinationIP);
 
 			if (!TryGetValue(instance, out var flow))
 			{
-				flow = new RxFlow(instance)
-				{
-					SourceIP = ip.SourceIP,
-					DestinationIP = ip.DestinationIP,
-					DestinationPort = !ignoreDestinationPort ? Convert.ToInt32(ip.DestinationPort) : -1,
-					TransportType = FlowTransportType.IP,
-				};
+				flow = new RxFlow(instance);
 				Add(flow);
+			}
+
+			var ip = flowInfo.IpConfiguration;
+			if (ip != null)
+			{
+				flow.SourceIP = ip.SourceIP;
+				flow.DestinationIP = ip.DestinationIP;
+				flow.DestinationPort = !ignoreDestinationPort ? Convert.ToInt32(ip.DestinationPort) : -1;
+				flow.TransportType = FlowTransportType.IP;
+			}
+			else
+			{
+				flow.SourceIP = String.Empty;
+				flow.DestinationIP = String.Empty;
+				flow.DestinationPort = -1;
 			}
 
 			flow.FlowOwner = FlowOwner.FlowEngineering;
 			flow.LinkedFlow = Convert.ToString(flowInfo.ProvisionedFlowId);
-			flow.IncomingInterface = dcfDynamicLink.PK;
-			flow.ExpectedBitrate = flowInfo.GetBitrate();
+			flow.IncomingInterface = incomingIntf.Index;
+			flow.ExpectedBitrate = flowInfo.TryGetBitrate(out var bitrate) ? bitrate : -1;
 
 			return flow;
 		}
 
-		public override RxFlow UnregisterFlowEngineeringFlow(ConnectorAPI.FlowEngineering.Info.FlowInfoMessage flowInfo, bool ignoreDestinationPort = false)
+		public override RxFlow UnregisterFlowEngineeringFlow(FlowInfoMessage flowInfo)
 		{
 			if (flowInfo == null)
 			{
 				throw new ArgumentNullException(nameof(flowInfo));
 			}
 
-			var ip = flowInfo.IpConfiguration;
-			if (ip == null)
+			var provisionedFlowId = Convert.ToString(flowInfo.ProvisionedFlowId);
+			var linkedFlow = Values.FirstOrDefault(x => String.Equals(x.LinkedFlow, provisionedFlowId));
+
+			if (linkedFlow == null)
 			{
-				throw new NotSupportedException("Only IP flows are supported");
+				throw new ArgumentException($"Couldn't find incoming flow with provisioned flow ID '{provisionedFlowId}'");
 			}
 
-			var instance = !ignoreDestinationPort
-				? String.Join("/", ip.SourceIP, $"{ip.DestinationIP}:{ip.DestinationPort}")
-				: String.Join("/", ip.SourceIP, ip.DestinationIP);
-
-			if (!TryGetValue(instance, out var flow))
+			if (linkedFlow.IsPresent)
 			{
-				return null;
-			}
-
-			if (flow.IsPresent)
-			{
-				flow.FlowOwner = FlowOwner.LocalSystem;
-				flow.LinkedFlow = String.Empty;
-				flow.ExpectedBitrate = -1;
+				linkedFlow.FlowOwner = FlowOwner.LocalSystem;
+				linkedFlow.LinkedFlow = String.Empty;
+				linkedFlow.ExpectedBitrate = -1;
 			}
 			else
 			{
-				Remove(instance);
+				Remove(linkedFlow);
 			}
 
-			return flow;
+			return linkedFlow;
 		}
 
 		public override void LoadTable(SLProtocol protocol)
