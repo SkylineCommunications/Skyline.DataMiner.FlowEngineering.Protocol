@@ -5,23 +5,38 @@
 
 	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Enums;
 	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
+	using Skyline.DataMiner.FlowEngineering.Protocol.DCF;
 	using Skyline.DataMiner.FlowEngineering.Protocol.Model;
 	using Skyline.DataMiner.Scripting;
 
-	public class FlowEngineeringManager
+	public class FlowEngineeringManager : IDisposable
 	{
-		public FlowEngineeringManager()
+		private readonly Lazy<DcfInterfaceHelper> _lazy_dcfIntfHelper;
+
+		internal FlowEngineeringManager(string key, SLProtocol protocol)
 		{
+			Key = key;
 			Interfaces = new Interfaces(this);
 			IncomingFlows = new RxFlows(this);
 			OutgoingFlows = new TxFlows(this);
+			ProvisionedFlows = new ProvisionedFlows(this);
+
+			_lazy_dcfIntfHelper = new Lazy<DcfInterfaceHelper>(() => DcfInterfaceHelper.Create(protocol));
+
+			LoadTables(protocol);
 		}
+
+		internal string Key { get; }
 
 		public Interfaces Interfaces { get; }
 
 		public RxFlows IncomingFlows { get; }
 
 		public TxFlows OutgoingFlows { get; }
+
+		public ProvisionedFlows ProvisionedFlows { get; }
+
+		public DcfInterfaceHelper DcfInterfaceHelper => _lazy_dcfIntfHelper.Value;
 
 		public static FlowEngineeringManager GetInstance(SLProtocol protocol) => FlowEngineeringManagerInstances.GetInstance(protocol);
 
@@ -32,6 +47,7 @@
 
 			IncomingFlows.LoadTable(protocol);
 			OutgoingFlows.LoadTable(protocol);
+			ProvisionedFlows.LoadTable(protocol);
 		}
 
 		public void UpdateTables(SLProtocol protocol, bool includeStatistics = true)
@@ -39,6 +55,7 @@
 			Interfaces.UpdateTable(protocol, includeStatistics);
 			IncomingFlows.UpdateTable(protocol, includeStatistics);
 			OutgoingFlows.UpdateTable(protocol, includeStatistics);
+			ProvisionedFlows.UpdateTable(protocol);
 		}
 
 		public void UpdateInterfaceAndIncomingFlowsTables(SLProtocol protocol, bool includeStatistics = true)
@@ -135,5 +152,25 @@
 
 			return removedFlows;
 		}
+
+		#region IDisposable
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			FlowEngineeringManagerInstances.RemoveInstance(this);
+		}
+
+		~FlowEngineeringManager()
+		{
+			Dispose(false);
+		}
+
+		#endregion
 	}
 }

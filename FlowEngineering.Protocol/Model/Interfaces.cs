@@ -58,6 +58,16 @@
 			}
 		}
 
+		public bool Remove(Interface intf)
+		{
+			if (intf == null)
+			{
+				throw new ArgumentNullException(nameof(intf));
+			}
+
+			return Remove(intf.Index);
+		}
+
 		public void ReplaceInterfaces(IEnumerable<Interface> newInterfaces)
 		{
 			if (newInterfaces == null)

@@ -582,5 +582,153 @@ namespace Skyline.DataMiner.Scripting
 				public const int fleoutgoingflowstablepresent = 13;
 			}
 		}
+		public class Fleprovisionedflowstable
+		{
+			/// <summary>PID: 1000300</summary>
+			public const int tablePid = 1000300;
+			/// <summary>IDX: 0</summary>
+			public const int indexColumn = 0;
+			/// <summary>PID: 1000301</summary>
+			public const int indexColumnPid = 1000301;
+			public class Pid
+			{
+				/// <summary>PID: 1000301 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableid_1000301 = 1000301;
+				/// <summary>PID: 1000301 | Type: read</summary>
+				public const int fleprovisionedflowstableid = 1000301;
+				/// <summary>PID: 1000302 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstablesourceid_1000302 = 1000302;
+				/// <summary>PID: 1000302 | Type: read</summary>
+				public const int fleprovisionedflowstablesourceid = 1000302;
+				/// <summary>PID: 1000303 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstabledestinationid_1000303 = 1000303;
+				/// <summary>PID: 1000303 | Type: read</summary>
+				public const int fleprovisionedflowstabledestinationid = 1000303;
+				/// <summary>PID: 1000304 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableincomingdcfinterfaceid_1000304 = 1000304;
+				/// <summary>PID: 1000304 | Type: read</summary>
+				public const int fleprovisionedflowstableincomingdcfinterfaceid = 1000304;
+				/// <summary>PID: 1000305 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableincomingdcfinterfacedynamiclink_1000305 = 1000305;
+				/// <summary>PID: 1000305 | Type: read</summary>
+				public const int fleprovisionedflowstableincomingdcfinterfacedynamiclink = 1000305;
+				/// <summary>PID: 1000306 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableoutgoingdcfinterfaceid_1000306 = 1000306;
+				/// <summary>PID: 1000306 | Type: read</summary>
+				public const int fleprovisionedflowstableoutgoingdcfinterfaceid = 1000306;
+				/// <summary>PID: 1000307 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableoutgoingdcfinterfacedynamiclink_1000307 = 1000307;
+				/// <summary>PID: 1000307 | Type: read</summary>
+				public const int fleprovisionedflowstableoutgoingdcfinterfacedynamiclink = 1000307;
+				/// <summary>PID: 1000308 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableoptionalsourceidentifier_1000308 = 1000308;
+				/// <summary>PID: 1000308 | Type: read</summary>
+				public const int fleprovisionedflowstableoptionalsourceidentifier = 1000308;
+				/// <summary>PID: 1000309 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableoptionaldestinationidentifier_1000309 = 1000309;
+				/// <summary>PID: 1000309 | Type: read</summary>
+				public const int fleprovisionedflowstableoptionaldestinationidentifier = 1000309;
+				/// <summary>PID: 1000310 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstabledestinationip_1000310 = 1000310;
+				/// <summary>PID: 1000310 | Type: read</summary>
+				public const int fleprovisionedflowstabledestinationip = 1000310;
+				/// <summary>PID: 1000311 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstabledestinationport_1000311 = 1000311;
+				/// <summary>PID: 1000311 | Type: read</summary>
+				public const int fleprovisionedflowstabledestinationport = 1000311;
+				/// <summary>PID: 1000312 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstablesourceip_1000312 = 1000312;
+				/// <summary>PID: 1000312 | Type: read</summary>
+				public const int fleprovisionedflowstablesourceip = 1000312;
+				/// <summary>PID: 1000313 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableextradata_1000313 = 1000313;
+				/// <summary>PID: 1000313 | Type: read</summary>
+				public const int fleprovisionedflowstableextradata = 1000313;
+				public class Write
+				{
+				}
+			}
+			public class Idx
+			{
+				/// <summary>IDX: 0 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableid_1000301 = 0;
+				/// <summary>IDX: 0 | Type: read</summary>
+				public const int fleprovisionedflowstableid = 0;
+				/// <summary>IDX: 1 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstablesourceid_1000302 = 1;
+				/// <summary>IDX: 1 | Type: read</summary>
+				public const int fleprovisionedflowstablesourceid = 1;
+				/// <summary>IDX: 2 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstabledestinationid_1000303 = 2;
+				/// <summary>IDX: 2 | Type: read</summary>
+				public const int fleprovisionedflowstabledestinationid = 2;
+				/// <summary>IDX: 3 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableincomingdcfinterfaceid_1000304 = 3;
+				/// <summary>IDX: 3 | Type: read</summary>
+				public const int fleprovisionedflowstableincomingdcfinterfaceid = 3;
+				/// <summary>IDX: 4 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableincomingdcfinterfacedynamiclink_1000305 = 4;
+				/// <summary>IDX: 4 | Type: read</summary>
+				public const int fleprovisionedflowstableincomingdcfinterfacedynamiclink = 4;
+				/// <summary>IDX: 5 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableoutgoingdcfinterfaceid_1000306 = 5;
+				/// <summary>IDX: 5 | Type: read</summary>
+				public const int fleprovisionedflowstableoutgoingdcfinterfaceid = 5;
+				/// <summary>IDX: 6 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableoutgoingdcfinterfacedynamiclink_1000307 = 6;
+				/// <summary>IDX: 6 | Type: read</summary>
+				public const int fleprovisionedflowstableoutgoingdcfinterfacedynamiclink = 6;
+				/// <summary>IDX: 7 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableoptionalsourceidentifier_1000308 = 7;
+				/// <summary>IDX: 7 | Type: read</summary>
+				public const int fleprovisionedflowstableoptionalsourceidentifier = 7;
+				/// <summary>IDX: 8 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableoptionaldestinationidentifier_1000309 = 8;
+				/// <summary>IDX: 8 | Type: read</summary>
+				public const int fleprovisionedflowstableoptionaldestinationidentifier = 8;
+				/// <summary>IDX: 9 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstabledestinationip_1000310 = 9;
+				/// <summary>IDX: 9 | Type: read</summary>
+				public const int fleprovisionedflowstabledestinationip = 9;
+				/// <summary>IDX: 10 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstabledestinationport_1000311 = 10;
+				/// <summary>IDX: 10 | Type: read</summary>
+				public const int fleprovisionedflowstabledestinationport = 10;
+				/// <summary>IDX: 11 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstablesourceip_1000312 = 11;
+				/// <summary>IDX: 11 | Type: read</summary>
+				public const int fleprovisionedflowstablesourceip = 11;
+				/// <summary>IDX: 12 | Type: read</summary>
+				[EditorBrowsable(EditorBrowsableState.Never)]
+				public const int fleprovisionedflowstableextradata_1000313 = 12;
+				/// <summary>IDX: 12 | Type: read</summary>
+				public const int fleprovisionedflowstableextradata = 12;
+			}
+		}
 	}
 }
