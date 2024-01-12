@@ -79,9 +79,9 @@
 						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationip,
 						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationport,
 						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceip,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableextradata,
+						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstablemetadata,
 					},
-					(string id, string sourceId, string destId, int inDcfId, string inDcfLink, int outDcfId, string outDcfLink, string sourceIdf, string destIdf, string destIp, int destPort, string sourceIp, string extra) =>
+					(string id, string sourceId, string destId, int inDcfId, string inDcfLink, int outDcfId, string outDcfLink, string sourceIdf, string destIdf, string destIp, int destPort, string sourceIp, string metadata) =>
 					{
 						return new
 						{
@@ -97,7 +97,7 @@
 							DestIp = destIp,
 							DestPort = destPort,
 							SourceIp = sourceIp,
-							ExtraData = extra,
+							Metadata = metadata,
 						};
 					});
 
@@ -122,7 +122,7 @@
 				provisionedFlow.DestinationIP = row.DestIp;
 				provisionedFlow.DestinationPort = row.DestPort;
 				provisionedFlow.SourceIP = row.SourceIp;
-				provisionedFlow.ExtraData = row.ExtraData;
+				provisionedFlow.Metadata = row.Metadata;
 			}
 		}
 
@@ -141,7 +141,7 @@
 				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstabledestinationip, Values.Select(x => x.DestinationIP)),
 				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstabledestinationport, Values.Select(x => (object)x.DestinationPort)),
 				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstablesourceip, Values.Select(x => x.SourceIP)),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstableextradata, Values.Select(x => x.ExtraData)),
+				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstablemetadata, Values.Select(x => x.Metadata)),
 			};
 
 			protocol.SetColumns(
@@ -149,6 +149,32 @@
 				deleteOldRows: true,
 				Values.Select(x => Convert.ToString(x.ID)).ToArray(),
 				columns.ToArray());
+		}
+
+		public void AddToTable(SLProtocol protocol, ProvisionedFlow provisionedFlow)
+		{
+			if (provisionedFlow == null)
+			{
+				throw new ArgumentNullException(nameof(provisionedFlow));
+			}
+
+			provisionedFlow.AddToTable(protocol);
+		}
+
+		public void RemoveFromTable(SLProtocol protocol, ProvisionedFlow provisionedFlow)
+		{
+			if (provisionedFlow == null)
+			{
+				throw new ArgumentNullException(nameof(provisionedFlow));
+			}
+
+			provisionedFlow.RemoveFromTable(protocol);
+		}
+
+		public void RemoveFromTable(SLProtocol protocol, Guid provisionedFlowId)
+		{
+			var key = Convert.ToString(provisionedFlowId);
+			protocol.DeleteRow(Parameter.Fleprovisionedflowstable.tablePid, key);
 		}
 	}
 }

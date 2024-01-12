@@ -34,7 +34,7 @@
 
 		public double ExpectedBitrate { get; set; } = -1;
 
-		public ExpectedStatus ExpectedBitrateStatus => Tools.CalculateExpectedBitrateStatus(Bitrate, ExpectedBitrate);
+		public ExpectedStatus ExpectedBitrateStatus => Helpers.CalculateExpectedBitrateStatus(Bitrate, ExpectedBitrate);
 
 		public string Label { get; set; }
 

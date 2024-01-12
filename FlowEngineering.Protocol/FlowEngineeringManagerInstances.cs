@@ -57,9 +57,7 @@
 			if (protocol.DataMinerID < 0 || protocol.ElementID < 0)
 				throw new ArgumentException(nameof(protocol));
 
-			string key = String.Join("/", protocol.DataMinerID, protocol.ElementID);
-
-			return key;
+			return String.Join("/", protocol.DataMinerID, protocol.ElementID);
 		}
 	}
 }

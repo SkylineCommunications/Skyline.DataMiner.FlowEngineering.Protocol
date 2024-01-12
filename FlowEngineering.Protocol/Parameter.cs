@@ -654,9 +654,9 @@ namespace Skyline.DataMiner.Scripting
 				public const int fleprovisionedflowstablesourceip = 1000312;
 				/// <summary>PID: 1000313 | Type: read</summary>
 				[EditorBrowsable(EditorBrowsableState.Never)]
-				public const int fleprovisionedflowstableextradata_1000313 = 1000313;
+				public const int fleprovisionedflowstablemetadata_1000313 = 1000313;
 				/// <summary>PID: 1000313 | Type: read</summary>
-				public const int fleprovisionedflowstableextradata = 1000313;
+				public const int fleprovisionedflowstablemetadata = 1000313;
 				public class Write
 				{
 				}
@@ -725,9 +725,9 @@ namespace Skyline.DataMiner.Scripting
 				public const int fleprovisionedflowstablesourceip = 11;
 				/// <summary>IDX: 12 | Type: read</summary>
 				[EditorBrowsable(EditorBrowsableState.Never)]
-				public const int fleprovisionedflowstableextradata_1000313 = 12;
+				public const int fleprovisionedflowstablemetadata_1000313 = 12;
 				/// <summary>IDX: 12 | Type: read</summary>
-				public const int fleprovisionedflowstableextradata = 12;
+				public const int fleprovisionedflowstablemetadata = 12;
 			}
 		}
 	}

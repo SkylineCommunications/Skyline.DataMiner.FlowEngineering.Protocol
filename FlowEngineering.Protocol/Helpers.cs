@@ -2,7 +2,7 @@
 {
     using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
 
-    public static class Tools
+    public static class Helpers
     {
         public static ExpectedStatus CalculateExpectedStatus(int value, int expected)
         {

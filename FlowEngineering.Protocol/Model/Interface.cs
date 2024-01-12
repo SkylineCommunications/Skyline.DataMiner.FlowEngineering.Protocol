@@ -46,13 +46,13 @@
 
 		public double RxExpectedBitrate { get; internal set; }
 
-		public ExpectedStatus RxExpectedBitrateStatus => Tools.CalculateExpectedBitrateStatus(RxBitrate, RxExpectedBitrate);
+		public ExpectedStatus RxExpectedBitrateStatus => Helpers.CalculateExpectedBitrateStatus(RxBitrate, RxExpectedBitrate);
 
 		public int RxFlows { get; set; }
 
 		public int RxExpectedFlows { get; internal set; }
 
-		public ExpectedStatus RxExpectedFlowsStatus => Tools.CalculateExpectedStatus(RxFlows, RxExpectedFlows);
+		public ExpectedStatus RxExpectedFlowsStatus => Helpers.CalculateExpectedStatus(RxFlows, RxExpectedFlows);
 
 		public double TxBitrate { get; set; }
 
@@ -60,13 +60,13 @@
 
 		public double TxExpectedBitrate { get; internal set; }
 
-		public ExpectedStatus TxExpectedBitrateStatus => Tools.CalculateExpectedBitrateStatus(TxBitrate, TxExpectedBitrate);
+		public ExpectedStatus TxExpectedBitrateStatus => Helpers.CalculateExpectedBitrateStatus(TxBitrate, TxExpectedBitrate);
 
 		public int TxFlows { get; set; }
 
 		public int TxExpectedFlows { get; internal set; }
 
-		public ExpectedStatus TxExpectedFlowsStatus => Tools.CalculateExpectedStatus(TxFlows, TxExpectedFlows);
+		public ExpectedStatus TxExpectedFlowsStatus => Helpers.CalculateExpectedStatus(TxFlows, TxExpectedFlows);
 
 		/// <summary>
 		/// Gets or sets the additional data associated with this object.
