@@ -53,7 +53,7 @@
 			OutgoingFlows.UpdateTable(protocol, includeStatistics);
 		}
 
-		public (ICollection<Flow> addedFlows, ICollection<Flow> removedFlows) HandleInterAppMessage(SLProtocol protocol, FlowInfoMessage message, string flowInstance, bool ignoreDestinationPort = false)
+		public ICollection<Flow> RegisterFlowEngineeringFlowsFromInterAppMessage(SLProtocol protocol, FlowInfoMessage message, string newFlowInstance, bool ignoreDestinationPort = false)
 		{
 			if (protocol == null)
 			{
@@ -65,54 +65,75 @@
 				throw new ArgumentNullException(nameof(message));
 			}
 
-			var addedFlows = new List<Flow>();
-			var removedFlows = new List<Flow>();
-
-			switch (message.ActionType)
+			if (message.ActionType != ActionType.Delete)
 			{
-				case ActionType.Create:
-					if (message.IsIncoming)
-					{
-						var flow = IncomingFlows.RegisterFlowEngineeringFlow(message, flowInstance, ignoreDestinationPort);
+				throw new ArgumentException("Expected a FlowInfoMessage with ActionType 'Delete'");
+			}
 
-						if (flow != null)
-							addedFlows.Add(flow);
-					}
-					else
-					{
-						var flow = OutgoingFlows.RegisterFlowEngineeringFlow(message, flowInstance, ignoreDestinationPort);
+			if (String.IsNullOrWhiteSpace(newFlowInstance))
+			{
+				throw new ArgumentException($"'{nameof(newFlowInstance)}' cannot be null or whitespace.", nameof(newFlowInstance));
+			}
 
-						if (flow != null)
-							addedFlows.Add(flow);
-					}
+			var addedFlows = new List<Flow>();
 
-					break;
+			if (message.IsIncoming)
+			{
+				var flow = IncomingFlows.RegisterFlowEngineeringFlow(message, newFlowInstance, ignoreDestinationPort);
 
-				case ActionType.Delete:
-					if (message.IsIncoming)
-					{
-						var flow = IncomingFlows.UnregisterFlowEngineeringFlow(message);
+				if (flow != null)
+					addedFlows.Add(flow);
+			}
+			else
+			{
+				var flow = OutgoingFlows.RegisterFlowEngineeringFlow(message, newFlowInstance, ignoreDestinationPort);
 
-						if (flow != null)
-							removedFlows.Add(flow);
-					}
-					else
-					{
-						var flow = OutgoingFlows.UnregisterFlowEngineeringFlow(message);
-
-						if (flow != null)
-							removedFlows.Add(flow);
-					}
-
-					break;
-
-				default:
-					throw new InvalidOperationException($"Unknown action: {message.ActionType}");
+				if (flow != null)
+					addedFlows.Add(flow);
 			}
 
 			UpdateTables(protocol);
 
-			return (addedFlows, removedFlows);
+			return addedFlows;
+		}
+
+		public ICollection<Flow> UnregisterFlowEngineeringFlowsFromInterAppMessage(SLProtocol protocol, FlowInfoMessage message)
+		{
+			if (protocol == null)
+			{
+				throw new ArgumentNullException(nameof(protocol));
+			}
+
+			if (message == null)
+			{
+				throw new ArgumentNullException(nameof(message));
+			}
+
+			if (message.ActionType != ActionType.Create)
+			{
+				throw new ArgumentException("Expected a FlowInfoMessage with ActionType 'Create'");
+			}
+
+			var removedFlows = new List<Flow>();
+
+			if (message.IsIncoming)
+			{
+				var flow = IncomingFlows.UnregisterFlowEngineeringFlow(message);
+
+				if (flow != null)
+					removedFlows.Add(flow);
+			}
+			else
+			{
+				var flow = OutgoingFlows.UnregisterFlowEngineeringFlow(message);
+
+				if (flow != null)
+					removedFlows.Add(flow);
+			}
+
+			UpdateTables(protocol);
+
+			return removedFlows;
 		}
 	}
 }
