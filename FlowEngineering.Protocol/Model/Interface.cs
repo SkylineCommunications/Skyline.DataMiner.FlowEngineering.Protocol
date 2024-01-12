@@ -1,12 +1,13 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
-	using System;
-	using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
-	using Skyline.DataMiner.FlowEngineering.Protocol;
-	using Skyline.DataMiner.Scripting;
+    using Skyline.DataMiner.FlowEngineering.Protocol;
+    using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
+    using Skyline.DataMiner.Scripting;
 
-	public class Interface : IEquatable<Interface>
+    public class Interface : IEquatable<Interface>
 	{
 		public Interface(string index)
 		{

@@ -1,4 +1,4 @@
-﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
+﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Enums
 {
     public enum FlowTransportType
     {

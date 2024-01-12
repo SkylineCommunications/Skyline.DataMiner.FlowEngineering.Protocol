@@ -1,11 +1,12 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
-	using System;
-	using System.Collections.Generic;
+    using System;
+    using System.Collections.Generic;
 
-	using Skyline.DataMiner.FlowEngineering.Protocol;
+    using Skyline.DataMiner.FlowEngineering.Protocol;
+    using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
 
-	public class Flow : IEquatable<Flow>
+    public class Flow : IEquatable<Flow>
 	{
 		protected Flow(string instance)
 		{

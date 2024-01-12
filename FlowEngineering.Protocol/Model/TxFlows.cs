@@ -1,16 +1,17 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
-	using Skyline.DataMiner.Core.DataMinerSystem.Protocol;
-	using Skyline.DataMiner.FlowEngineering.Protocol;
-	using Skyline.DataMiner.FlowEngineering.Protocol.Exceptions;
-	using Skyline.DataMiner.Scripting;
+    using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
+    using Skyline.DataMiner.Core.DataMinerSystem.Protocol;
+    using Skyline.DataMiner.FlowEngineering.Protocol;
+    using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
+    using Skyline.DataMiner.FlowEngineering.Protocol.Exceptions;
+    using Skyline.DataMiner.Scripting;
 
-	public class TxFlows : Flows<TxFlow>
+    public class TxFlows : Flows<TxFlow>
 	{
 		public TxFlows(FlowEngineeringManager manager) : base(manager)
 		{

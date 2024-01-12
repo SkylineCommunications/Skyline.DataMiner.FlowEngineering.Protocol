@@ -1,8 +1,8 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol
 {
-	using Skyline.DataMiner.FlowEngineering.Protocol.Model;
+    using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
 
-	public static class Tools
+    public static class Tools
     {
         public static ExpectedStatus CalculateExpectedStatus(int value, int expected)
         {

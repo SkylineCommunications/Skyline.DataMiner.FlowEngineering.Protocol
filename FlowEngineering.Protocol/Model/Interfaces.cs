@@ -1,15 +1,16 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
-	using Skyline.DataMiner.Core.DataMinerSystem.Protocol;
-	using Skyline.DataMiner.FlowEngineering.Protocol;
-	using Skyline.DataMiner.FlowEngineering.Protocol.DCF;
-	using Skyline.DataMiner.Scripting;
+    using Skyline.DataMiner.Core.DataMinerSystem.Protocol;
+    using Skyline.DataMiner.FlowEngineering.Protocol;
+    using Skyline.DataMiner.FlowEngineering.Protocol.DCF;
+    using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
+    using Skyline.DataMiner.Scripting;
 
-	public class Interfaces : Dictionary<string, Interface>
+    public class Interfaces : Dictionary<string, Interface>
 	{
 		private readonly FlowEngineeringManager _manager;
 
