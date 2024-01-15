@@ -82,17 +82,17 @@
 						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceip,
 						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablemetadata,
 					},
-					(string id, string sourceId, string destId, int inDcfId, string inDcfLink, int outDcfId, string outDcfLink, string sourceIdf, string destIdf, string destIp, int destPort, string sourceIp, string metadata) =>
+					(string id, string sourceId, string destId, int rxDcfId, string rxDcfLink, int txDcfId, string txDcfLink, string sourceIdf, string destIdf, string destIp, int destPort, string sourceIp, string metadata) =>
 					{
 						return new
 						{
 							Id = id,
 							SourceId = sourceId,
 							DestId = destId,
-							InDcfId = inDcfId,
-							InDcfLink = inDcfLink,
-							OutDcfId = outDcfId,
-							OutDcfLink = outDcfLink,
+							RxDcfId = rxDcfId,
+							RxDcfLink = rxDcfLink,
+							TxDcfId = txDcfId,
+							TxDcfLink = txDcfLink,
 							SourceIdf = sourceIdf,
 							DestIdf = destIdf,
 							DestIp = destIp,
@@ -114,10 +114,10 @@
 
 				provisionedFlow.SourceID = Guid.Parse(row.SourceId);
 				provisionedFlow.DestinationID = Guid.Parse(row.DestId);
-				provisionedFlow.IncomingDcfInterfaceID = row.InDcfId;
-				provisionedFlow.IncomingDcfDynamicLink = row.InDcfLink;
-				provisionedFlow.OutgoingDcfInterfaceID = row.OutDcfId;
-				provisionedFlow.OutgoingDcfDynamicLink = row.OutDcfLink;
+				provisionedFlow.IncomingDcfInterfaceID = row.RxDcfId;
+				provisionedFlow.IncomingDcfDynamicLink = row.RxDcfLink;
+				provisionedFlow.OutgoingDcfInterfaceID = row.TxDcfId;
+				provisionedFlow.OutgoingDcfDynamicLink = row.TxDcfLink;
 				provisionedFlow.OptionalSourceIdentifier = row.SourceIdf;
 				provisionedFlow.OptionalDestinationIdentifier = row.DestIdf;
 				provisionedFlow.DestinationIP = row.DestIp;
@@ -177,6 +177,5 @@
 			var key = Convert.ToString(provisionedFlowId);
 			protocol.DeleteRow(FleParameters.Fleprovisionedflowstable.tablePid, key);
 		}
-
 	}
 }

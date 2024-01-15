@@ -22,7 +22,7 @@
 		}
 
 		/// <summary>
-		/// Gets or sets the DOM instance ID of the provisioned flow.
+		/// Gets the DOM instance ID of the provisioned flow.
 		/// </summary>
 		public Guid ID { get; }
 
