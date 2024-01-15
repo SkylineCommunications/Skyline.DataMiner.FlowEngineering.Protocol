@@ -79,11 +79,11 @@
 			OperationalStatus = operStatus;
 
 			var row = new object[5];
-			row[Parameter.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableindex] = Index;
-			row[Parameter.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableadminstatus] = (int)AdminStatus;
-			row[Parameter.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableoperstatus] = (int)OperationalStatus;
+			row[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableindex] = Index;
+			row[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableadminstatus] = (int)AdminStatus;
+			row[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableoperstatus] = (int)OperationalStatus;
 
-			protocol.SetRow(Parameter.Fleinterfacesoverviewtable.tablePid, Index, row);
+			protocol.SetRow(FleParameters.Fleinterfacesoverviewtable.tablePid, Index, row);
 		}
 
 		public override bool Equals(object obj)

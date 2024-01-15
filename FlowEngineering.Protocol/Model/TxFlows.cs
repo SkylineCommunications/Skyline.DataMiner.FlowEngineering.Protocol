@@ -33,102 +33,41 @@
 			return flow;
 		}
 
-		public override TxFlow RegisterFlowEngineeringFlow(FlowInfoMessage flowInfo, string instance, bool ignoreDestinationPort = false)
+		public override IEnumerable<TxFlow> UnlinkFlowEngineeringFlows(Guid provisionedFlowId)
 		{
-			if (flowInfo == null)
-			{
-				throw new ArgumentNullException(nameof(flowInfo));
-			}
+			var provisionedFlowIdString = Convert.ToString(provisionedFlowId);
+			var linkedFlows = Values.Where(x => String.Equals(x.LinkedFlow, provisionedFlowId));
 
-			if (String.IsNullOrWhiteSpace(instance))
-			{
-				throw new ArgumentException($"'{nameof(instance)}' cannot be null or whitespace.", nameof(instance));
-			}
-
-			if (!_manager.Interfaces.TryGetByDcfInterfaceID(flowInfo.OutgoingDcfInterfaceID, out var outgoingIntf) &&
-				!_manager.Interfaces.TryGetByDcfDynamicLink(flowInfo.OutgoingDcfDynamicLink, out outgoingIntf))
-			{
-				throw new DcfInterfaceNotFoundException($"Couldn't find outgoing DCF interface with ID '{flowInfo.OutgoingDcfInterfaceID}' and link '{flowInfo.OutgoingDcfDynamicLink}'");
-			}
-
-			if (!TryGetValue(instance, out var flow))
-			{
-				flow = new TxFlow(instance);
-				Add(flow);
-			}
-
-			var ip = flowInfo.IpConfiguration;
-			if (ip != null)
-			{
-				flow.SourceIP = ip.SourceIP;
-				flow.DestinationIP = ip.DestinationIP;
-				flow.DestinationPort = !ignoreDestinationPort ? Convert.ToInt32(ip.DestinationPort) : -1;
-				flow.TransportType = FlowTransportType.IP;
-			}
-			else
-			{
-				flow.SourceIP = String.Empty;
-				flow.DestinationIP = String.Empty;
-				flow.DestinationPort = -1;
-			}
-
-			flow.FlowOwner = FlowOwner.FlowEngineering;
-			flow.LinkedFlow = Convert.ToString(flowInfo.ProvisionedFlowId);
-			flow.OutgoingInterface = outgoingIntf.Index;
-			flow.ExpectedBitrate = flowInfo.TryGetBitrate(out var bitrate) ? bitrate : -1;
-
-			return flow;
-		}
-
-		public override TxFlow UnregisterFlowEngineeringFlow(FlowInfoMessage flowInfo)
-		{
-			if (flowInfo == null)
-			{
-				throw new ArgumentNullException(nameof(flowInfo));
-			}
-
-			var provisionedFlowId = Convert.ToString(flowInfo.ProvisionedFlowId);
-			var linkedFlow = Values.FirstOrDefault(x => String.Equals(x.LinkedFlow, provisionedFlowId));
-
-			if (linkedFlow == null)
-			{
-				throw new ArgumentException($"Couldn't find outgoing flow with provisioned flow ID '{provisionedFlowId}'");
-			}
-
-			if (linkedFlow.IsPresent)
+			foreach ( var linkedFlow in linkedFlows )
 			{
 				linkedFlow.FlowOwner = FlowOwner.LocalSystem;
 				linkedFlow.LinkedFlow = String.Empty;
 				linkedFlow.ExpectedBitrate = -1;
-			}
-			else
-			{
-				Remove(linkedFlow);
-			}
 
-			return linkedFlow;
+				yield return linkedFlow;
+			}
 		}
 
 		public override void LoadTable(SLProtocol protocol)
 		{
 			var table = protocol.GetLocalElement()
-				.GetTable(Parameter.Fleoutgoingflowstable.tablePid)
+				.GetTable(FleParameters.Fleoutgoingflowstable.tablePid)
 				.GetColumns(
 					new uint[]
 					{
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstableinstance,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstabledestinationip,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstabledestinationport,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstablesourceip,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstableoutgoinginterface,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstabletransporttype,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstabletxbitrate,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstableexpectedtxbitrate,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstablelabel,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstablefkincoming,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstablelinkedflow,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstableflowowner,
-						Parameter.Fleoutgoingflowstable.Idx.fleoutgoingflowstablepresent,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstableinstance,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstabledestinationip,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstabledestinationport,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstablesourceip,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstableoutgoinginterface,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstabletransporttype,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstabletxbitrate,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstableexpectedtxbitrate,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstablelabel,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstablefkincoming,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstablelinkedflow,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstableflowowner,
+						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstablepresent,
 					},
 					(string idx, string dest, int destPort, string source, string intf, int type, double bitrate, double expectedBitrate, string label, string fk, string linked, int owner, int present) =>
 					{
@@ -177,16 +116,16 @@
 		{
 			var columns = new List<(int Pid, IEnumerable<object> Data)>
 			{
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstabledestinationip, Values.Select(x => x.DestinationIP)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstabledestinationport, Values.Select(x => (object)x.DestinationPort)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstablesourceip, Values.Select(x => x.SourceIP)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstableoutgoinginterface, Values.Select(x => x.Interface)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstablefkincoming, Values.Select(x => x.ForeignKeyIncoming)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstabletransporttype, Values.Select(x => (object)x.TransportType)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstablelabel, Values.Select(x => x.Label ?? String.Empty)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstablelinkedflow, Values.Select(x => x.LinkedFlow ?? String.Empty)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstableflowowner, Values.Select(x => (object)x.FlowOwner)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstablepresent, Values.Select(x => (object)(x.IsPresent ? 1 : 0))),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstabledestinationip, Values.Select(x => x.DestinationIP)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstabledestinationport, Values.Select(x => (object)x.DestinationPort)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstablesourceip, Values.Select(x => x.SourceIP)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstableoutgoinginterface, Values.Select(x => x.Interface)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstablefkincoming, Values.Select(x => x.ForeignKeyIncoming)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstabletransporttype, Values.Select(x => (object)x.TransportType)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstablelabel, Values.Select(x => x.Label ?? String.Empty)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstablelinkedflow, Values.Select(x => x.LinkedFlow ?? String.Empty)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstableflowowner, Values.Select(x => (object)x.FlowOwner)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstablepresent, Values.Select(x => (object)(x.IsPresent ? 1 : 0))),
 			};
 
 			if (includeStatistics)
@@ -195,7 +134,7 @@
 			}
 
 			protocol.SetColumns(
-				Parameter.Fleoutgoingflowstable.tablePid,
+				FleParameters.Fleoutgoingflowstable.tablePid,
 				deleteOldRows: true,
 				Values.Select(x => x.Instance).ToArray(),
 				columns.ToArray());
@@ -204,7 +143,7 @@
 		public override void UpdateStatistics(SLProtocol protocol)
 		{
 			protocol.SetColumns(
-				Parameter.Fleoutgoingflowstable.tablePid,
+				FleParameters.Fleoutgoingflowstable.tablePid,
 				deleteOldRows: true,
 				Values.Select(x => x.Instance).ToArray(),
 				GetStatisticsColumns());
@@ -214,9 +153,9 @@
 		{
 			return new[]
 			{
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstabletxbitrate, Values.Select(x => (object)x.Bitrate)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstableexpectedtxbitrate, Values.Select(x => (object)x.ExpectedBitrate)),
-				(Parameter.Fleoutgoingflowstable.Pid.fleoutgoingflowstableexpectedtxbitratestatus, Values.Select(x => (object)x.ExpectedBitrateStatus)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstabletxbitrate, Values.Select(x => (object)x.Bitrate)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstableexpectedtxbitrate, Values.Select(x => (object)x.ExpectedBitrate)),
+				(FleParameters.Fleoutgoingflowstable.Pid.fleoutgoingflowstableexpectedtxbitratestatus, Values.Select(x => (object)x.ExpectedBitrateStatus)),
 			};
 		}
 	}

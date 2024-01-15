@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Linq;
 
+	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
 	using Skyline.DataMiner.Core.DataMinerSystem.Protocol;
 	using Skyline.DataMiner.Scripting;
 
@@ -63,23 +64,23 @@
 		public void LoadTable(SLProtocol protocol)
 		{
 			var table = protocol.GetLocalElement()
-				.GetTable(Parameter.Fleprovisionedflowstable.tablePid)
+				.GetTable(FleParameters.Fleprovisionedflowstable.tablePid)
 				.GetColumns(
 					new uint[]
 					{
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableid,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceid,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationid,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfaceid,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfacedynamiclink,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfaceid,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfacedynamiclink,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionalsourceidentifier,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionaldestinationidentifier,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationip,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationport,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceip,
-						Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstablemetadata,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableid,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceid,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationid,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfaceid,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfacedynamiclink,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfaceid,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfacedynamiclink,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionalsourceidentifier,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionaldestinationidentifier,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationip,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationport,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceip,
+						FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablemetadata,
 					},
 					(string id, string sourceId, string destId, int inDcfId, string inDcfLink, int outDcfId, string outDcfLink, string sourceIdf, string destIdf, string destIp, int destPort, string sourceIp, string metadata) =>
 					{
@@ -130,22 +131,22 @@
 		{
 			var columns = new List<(int Pid, IEnumerable<object> Data)>
 			{
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstablesourceid, Values.Select(x => Convert.ToString(x.SourceID))),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstabledestinationid, Values.Select(x => Convert.ToString(x.DestinationID))),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstableincomingdcfinterfaceid, Values.Select(x => (object)x.IncomingDcfInterfaceID)),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstableincomingdcfinterfacedynamiclink, Values.Select(x => x.IncomingDcfDynamicLink)),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstableoutgoingdcfinterfaceid, Values.Select(x => (object)x.OutgoingDcfInterfaceID)),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstableoutgoingdcfinterfacedynamiclink, Values.Select(x => x.OutgoingDcfDynamicLink)),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstableoptionalsourceidentifier, Values.Select(x => x.OptionalSourceIdentifier)),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstableoptionaldestinationidentifier, Values.Select(x => x.OptionalDestinationIdentifier)),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstabledestinationip, Values.Select(x => x.DestinationIP)),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstabledestinationport, Values.Select(x => (object)x.DestinationPort)),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstablesourceip, Values.Select(x => x.SourceIP)),
-				(Parameter.Fleprovisionedflowstable.Pid.fleprovisionedflowstablemetadata, Values.Select(x => x.Metadata)),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstablesourceid, Values.Select(x => Convert.ToString(x.SourceID))),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstabledestinationid, Values.Select(x => Convert.ToString(x.DestinationID))),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstableincomingdcfinterfaceid, Values.Select(x => (object)x.IncomingDcfInterfaceID)),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstableincomingdcfinterfacedynamiclink, Values.Select(x => x.IncomingDcfDynamicLink)),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstableoutgoingdcfinterfaceid, Values.Select(x => (object)x.OutgoingDcfInterfaceID)),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstableoutgoingdcfinterfacedynamiclink, Values.Select(x => x.OutgoingDcfDynamicLink)),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstableoptionalsourceidentifier, Values.Select(x => x.OptionalSourceIdentifier)),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstableoptionaldestinationidentifier, Values.Select(x => x.OptionalDestinationIdentifier)),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstabledestinationip, Values.Select(x => x.DestinationIP)),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstabledestinationport, Values.Select(x => (object)x.DestinationPort)),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstablesourceip, Values.Select(x => x.SourceIP)),
+				(FleParameters.Fleprovisionedflowstable.Pid.fleprovisionedflowstablemetadata, Values.Select(x => x.Metadata)),
 			};
 
 			protocol.SetColumns(
-				Parameter.Fleprovisionedflowstable.tablePid,
+				FleParameters.Fleprovisionedflowstable.tablePid,
 				deleteOldRows: true,
 				Values.Select(x => Convert.ToString(x.ID)).ToArray(),
 				columns.ToArray());
@@ -174,7 +175,8 @@
 		public void RemoveFromTable(SLProtocol protocol, Guid provisionedFlowId)
 		{
 			var key = Convert.ToString(provisionedFlowId);
-			protocol.DeleteRow(Parameter.Fleprovisionedflowstable.tablePid, key);
+			protocol.DeleteRow(FleParameters.Fleprovisionedflowstable.tablePid, key);
 		}
+
 	}
 }

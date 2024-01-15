@@ -95,23 +95,23 @@
 		{
 			var row = BuildRow();
 
-			if (protocol.Exists(Parameter.Fleprovisionedflowstable.tablePid, row.Key))
+			if (protocol.Exists(FleParameters.Fleprovisionedflowstable.tablePid, row.Key))
 			{
-				protocol.SetRow(Parameter.Fleprovisionedflowstable.tablePid, row.Key, (object[])row);
+				protocol.SetRow(FleParameters.Fleprovisionedflowstable.tablePid, row.Key, (object[])row);
 			}
 			else
 			{
-				protocol.AddRow(Parameter.Fleprovisionedflowstable.tablePid, (object[])row);
+				protocol.AddRow(FleParameters.Fleprovisionedflowstable.tablePid, (object[])row);
 			}
 		}
 
 		public void RemoveFromTable(SLProtocol protocol)
 		{
 			var key = Convert.ToString(ID);
-			protocol.DeleteRow(Parameter.Fleprovisionedflowstable.tablePid, key);
+			protocol.DeleteRow(FleParameters.Fleprovisionedflowstable.tablePid, key);
 		}
 
-		public static ProvisionedFlow FromFlowInfoMessage(FlowInfoMessage message)
+		public static ProvisionedFlow CreateFromFlowInfoMessage(FlowInfoMessage message)
 		{
 			if (message == null)
 			{
@@ -141,19 +141,19 @@
 
 			var row = new QActionRow(key);
 
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableid] = key;
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceid] = Convert.ToString(SourceID);
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationid] = Convert.ToString(DestinationID);
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfaceid] = IncomingDcfInterfaceID;
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfacedynamiclink] = IncomingDcfDynamicLink;
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfaceid] = OutgoingDcfInterfaceID;
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfacedynamiclink] = OutgoingDcfDynamicLink;
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionalsourceidentifier] = OptionalSourceIdentifier;
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionaldestinationidentifier] = OptionalDestinationIdentifier;
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationip] = DestinationIP;
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationport] = DestinationPort;
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceip] = SourceIP;
-			row[Parameter.Fleprovisionedflowstable.Idx.fleprovisionedflowstablemetadata] = Metadata;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableid] = key;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceid] = Convert.ToString(SourceID);
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationid] = Convert.ToString(DestinationID);
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfaceid] = IncomingDcfInterfaceID;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfacedynamiclink] = IncomingDcfDynamicLink;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfaceid] = OutgoingDcfInterfaceID;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfacedynamiclink] = OutgoingDcfDynamicLink;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionalsourceidentifier] = OptionalSourceIdentifier;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionaldestinationidentifier] = OptionalDestinationIdentifier;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationip] = DestinationIP;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationport] = DestinationPort;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceip] = SourceIP;
+			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablemetadata] = Metadata;
 
 			return row;
 		}

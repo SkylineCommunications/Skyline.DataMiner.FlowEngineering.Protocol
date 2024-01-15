@@ -67,8 +67,6 @@
 
 		public abstract void UpdateStatistics(SLProtocol protocol);
 
-		public abstract T RegisterFlowEngineeringFlow(FlowInfoMessage flowInfo, string instance, bool ignoreDestinationPort = false);
-
-		public abstract T UnregisterFlowEngineeringFlow(FlowInfoMessage flowInfo);
+		public abstract IEnumerable<T> UnlinkFlowEngineeringFlows(Guid provisionedFlowId);
 	}
 }
