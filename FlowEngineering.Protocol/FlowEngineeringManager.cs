@@ -21,6 +21,7 @@
 			IncomingFlows = new RxFlows(this);
 			OutgoingFlows = new TxFlows(this);
 			ProvisionedFlows = new ProvisionedFlows(this);
+			FlowUpdateTrackers = new FlowUpdateTrackers(this);
 
 			_lazy_dcfIntfHelper = new Lazy<DcfInterfaceHelper>(() => DcfInterfaceHelper.Create(protocol));
 
@@ -36,6 +37,8 @@
 		public TxFlows OutgoingFlows { get; }
 
 		public ProvisionedFlows ProvisionedFlows { get; }
+
+		public FlowUpdateTrackers FlowUpdateTrackers { get; }
 
 		public DcfInterfaceHelper DcfInterfaceHelper => _lazy_dcfIntfHelper.Value;
 
