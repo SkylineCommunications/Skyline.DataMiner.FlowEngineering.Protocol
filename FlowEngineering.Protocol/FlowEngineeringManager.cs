@@ -174,6 +174,8 @@
 				unlinkedFlows.AddRange(IncomingFlows.UnlinkFlowEngineeringFlows(provisionedFlowId));
 				unlinkedFlows.AddRange(OutgoingFlows.UnlinkFlowEngineeringFlows(provisionedFlowId));
 
+				ProvisionedFlows.Remove(provisionedFlow);
+
 				if (unlinkedFlows.Count > 0)
 				{
 					UpdateTables(protocol);
