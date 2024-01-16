@@ -29,9 +29,9 @@
 
 			set
 			{
-				if (column > _cells.Count)
+				while (column >= _cells.Count)
 				{
-					_cells.AddRange(Enumerable.Repeat<object>(default, column - _cells.Count));
+					_cells.Add(default);
 				}
 
 				_cells[column] = value;
