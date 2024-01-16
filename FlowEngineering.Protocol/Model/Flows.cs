@@ -5,7 +5,6 @@
 
 	using Skyline.DataMiner.FlowEngineering.Protocol;
 	using Skyline.DataMiner.Scripting;
-	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
 
 	public abstract class Flows<T> : Dictionary<string, T>
 		where T : Flow

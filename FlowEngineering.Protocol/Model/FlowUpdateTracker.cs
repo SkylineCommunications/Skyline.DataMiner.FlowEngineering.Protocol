@@ -44,6 +44,7 @@
 
 				var responseMessage = new FlowInfoResponseMessage()
 				{
+					ProvisionedFlowId = ProvisionedFlow.ID,
 					IsSuccess = success,
 					Message = message,
 				};
