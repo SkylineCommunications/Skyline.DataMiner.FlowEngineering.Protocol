@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Concurrent;
+	using System.Linq;
 
 	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
 
@@ -12,6 +13,17 @@
 		public FlowUpdateTrackers(FlowEngineeringManager manager)
 		{
 			_manager = manager;
+		}
+
+		public bool TryGet(ProvisionedFlow provisionedFlow, out FlowUpdateTracker updateTracker)
+		{
+			if (provisionedFlow == null)
+			{
+				throw new ArgumentNullException(nameof(provisionedFlow));
+			}
+
+			updateTracker = Values.FirstOrDefault(x => x.ProvisionedFlow == provisionedFlow);
+			return updateTracker != null;
 		}
 
 		public FlowUpdateTracker CreateTracker(FlowInfoMessage flowInfoMessage, ProvisionedFlow provisionedFlow)

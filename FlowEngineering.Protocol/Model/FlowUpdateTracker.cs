@@ -38,6 +38,11 @@
 
 		public void SetResult(SLProtocol protocol, bool success, string message)
 		{
+			if (protocol == null)
+			{
+				throw new ArgumentNullException(nameof(protocol));
+			}
+
 			try
 			{
 				_tcs.SetResult((success, message));
@@ -58,6 +63,16 @@
 			{
 				_parent.Remove(this);
 			}
+		}
+
+		public void SetSuccess(SLProtocol protocol)
+		{
+			if (protocol == null)
+			{
+				throw new ArgumentNullException(nameof(protocol));
+			}
+
+			SetResult(protocol, true, String.Empty);
 		}
 
 		public TaskAwaiter<(bool success, string message)> GetAwaiter()
