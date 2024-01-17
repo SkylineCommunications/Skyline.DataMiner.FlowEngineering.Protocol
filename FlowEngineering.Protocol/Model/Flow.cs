@@ -40,7 +40,7 @@
 
 		public string LinkedFlow { get; set; }
 
-		public FlowOwner FlowOwner { get; set; }
+		public FlowOwner FlowOwner => !String.IsNullOrEmpty(LinkedFlow) ? FlowOwner.FlowEngineering : FlowOwner.LocalSystem;
 
 		public bool IsPresent { get; set; }
 

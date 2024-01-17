@@ -72,7 +72,6 @@
 			{
 				if (linkedFlow.IsPresent)
 				{
-					linkedFlow.FlowOwner = FlowOwner.LocalSystem;
 					linkedFlow.LinkedFlow = String.Empty;
 					linkedFlow.ExpectedBitrate = -1;
 				}
@@ -83,6 +82,19 @@
 				}
 
 				yield return linkedFlow;
+			}
+		}
+
+		public void RegisterNotPresentOnLocalSystem(T flow)
+		{
+			if (flow.FlowOwner == FlowOwner.FlowEngineering)
+			{
+				// change to not present, but keep the row
+				flow.IsPresent = false;
+			}
+			else
+			{
+				Remove(flow);
 			}
 		}
 

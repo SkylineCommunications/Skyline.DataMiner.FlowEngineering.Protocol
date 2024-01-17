@@ -1,8 +1,8 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
     using System;
-	using System.Collections.Concurrent;
-	using System.Collections.Generic;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Linq;
 
     using Skyline.DataMiner.Core.DataMinerSystem.Protocol;

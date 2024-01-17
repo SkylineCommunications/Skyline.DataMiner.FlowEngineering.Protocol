@@ -36,13 +36,38 @@
 		/// </summary>
 		public object Tag { get; set; }
 
-		public void SetResult(SLProtocol protocol, bool success, string message)
+		public TaskAwaiter<(bool success, string message)> GetAwaiter()
+		{
+			return Task.GetAwaiter();
+		}
+
+		public void SetSuccess(SLProtocol protocol)
 		{
 			if (protocol == null)
 			{
 				throw new ArgumentNullException(nameof(protocol));
 			}
 
+			SetResult(protocol, true, String.Empty);
+		}
+
+		public void SetFailed(SLProtocol protocol, string message)
+		{
+			if (protocol == null)
+			{
+				throw new ArgumentNullException(nameof(protocol));
+			}
+
+			if (String.IsNullOrEmpty(message))
+			{
+				throw new ArgumentException($"'{nameof(message)}' cannot be null or empty.", nameof(message));
+			}
+
+			SetResult(protocol, false, message);
+		}
+
+		private void SetResult(SLProtocol protocol, bool success, string message)
+		{
 			try
 			{
 				_tcs.SetResult((success, message));
@@ -63,21 +88,6 @@
 			{
 				_parent.Remove(this);
 			}
-		}
-
-		public void SetSuccess(SLProtocol protocol)
-		{
-			if (protocol == null)
-			{
-				throw new ArgumentNullException(nameof(protocol));
-			}
-
-			SetResult(protocol, true, String.Empty);
-		}
-
-		public TaskAwaiter<(bool success, string message)> GetAwaiter()
-		{
-			return Task.GetAwaiter();
 		}
 
 		#region IDisposable

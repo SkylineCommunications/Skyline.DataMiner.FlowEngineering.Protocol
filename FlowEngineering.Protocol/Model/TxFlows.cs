@@ -49,10 +49,9 @@
 						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstablelabel,
 						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstablefkincoming,
 						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstablelinkedflow,
-						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstableflowowner,
 						FleParameters.Fleoutgoingflowstable.Idx.fleoutgoingflowstablepresent,
 					},
-					(string idx, string dest, int destPort, string source, string intf, int type, double bitrate, double expectedBitrate, string label, string fk, string linked, int owner, int present) =>
+					(string idx, string dest, int destPort, string source, string intf, int type, double bitrate, double expectedBitrate, string label, string fk, string linked, int present) =>
 					{
 						return new
 						{
@@ -67,7 +66,6 @@
 							Label = label,
 							FkIncoming = fk,
 							LinkedFlow = linked,
-							FlowOwner = (FlowOwner)owner,
 							IsPresent = Convert.ToBoolean(present),
 						};
 					});
@@ -90,7 +88,6 @@
 				flow.Label = row.Label;
 				flow.ForeignKeyIncoming = row.FkIncoming;
 				flow.LinkedFlow = row.LinkedFlow;
-				flow.FlowOwner = row.FlowOwner;
 				flow.IsPresent = row.IsPresent;
 			}
 		}
