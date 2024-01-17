@@ -1,13 +1,14 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
 	using System;
+	using System.Collections.Concurrent;
 	using System.Collections.Generic;
 	using System.Linq;
 
 	using Skyline.DataMiner.Core.DataMinerSystem.Protocol;
 	using Skyline.DataMiner.Scripting;
 
-	public class ProvisionedFlows : Dictionary<Guid, ProvisionedFlow>
+	public class ProvisionedFlows : ConcurrentDictionary<Guid, ProvisionedFlow>
 	{
 		private readonly FlowEngineeringManager _manager;
 
@@ -23,7 +24,7 @@
 				throw new ArgumentNullException(nameof(provisionedFlow));
 			}
 
-			Add(provisionedFlow.ID, provisionedFlow);
+			TryAdd(provisionedFlow.ID, provisionedFlow);
 		}
 
 		public ProvisionedFlow GetOrAdd(Guid id)
@@ -57,7 +58,7 @@
 				throw new ArgumentNullException(nameof(provisionedFlow));
 			}
 
-			return Remove(provisionedFlow.ID);
+			return TryRemove(provisionedFlow.ID, out _);
 		}
 
 		public void LoadTable(SLProtocol protocol)

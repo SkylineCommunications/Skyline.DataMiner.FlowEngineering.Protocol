@@ -1,12 +1,13 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
 	using System;
+	using System.Collections.Concurrent;
 	using System.Collections.Generic;
 
 	using Skyline.DataMiner.FlowEngineering.Protocol;
 	using Skyline.DataMiner.Scripting;
 
-	public abstract class Flows<T> : Dictionary<string, T>
+	public abstract class Flows<T> : ConcurrentDictionary<string, T>
 		where T : Flow
 	{
 		protected FlowEngineeringManager _manager;
@@ -23,7 +24,7 @@
 				throw new ArgumentNullException(nameof(flow));
 			}
 
-			Add(flow.Instance, flow);
+			TryAdd(flow.Instance, flow);
 		}
 
 		public void AddRange(IEnumerable<T> flows)
@@ -46,7 +47,7 @@
 				throw new ArgumentNullException(nameof(flow));
 			}
 
-			return Remove(flow.Instance);
+			return TryRemove(flow.Instance, out _);
 		}
 
 		public void ReplaceFlows(IEnumerable<T> newFlows)

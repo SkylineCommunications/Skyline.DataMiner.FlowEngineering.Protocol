@@ -1,7 +1,8 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
     using System;
-    using System.Collections.Generic;
+	using System.Collections.Concurrent;
+	using System.Collections.Generic;
     using System.Linq;
 
     using Skyline.DataMiner.Core.DataMinerSystem.Protocol;
@@ -10,7 +11,7 @@
     using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
     using Skyline.DataMiner.Scripting;
 
-    public class Interfaces : Dictionary<string, Interface>
+    public class Interfaces : ConcurrentDictionary<string, Interface>
 	{
 		private readonly FlowEngineeringManager _manager;
 
@@ -26,7 +27,7 @@
 				throw new ArgumentNullException(nameof(intf));
 			}
 
-			Add(intf.Index, intf);
+			TryAdd(intf.Index, intf);
 		}
 
 		public Interface GetOrAdd(string index)
@@ -65,7 +66,7 @@
 				throw new ArgumentNullException(nameof(intf));
 			}
 
-			return Remove(intf.Index);
+			return TryRemove(intf.Index, out _);
 		}
 
 		public void ReplaceInterfaces(IEnumerable<Interface> newInterfaces)

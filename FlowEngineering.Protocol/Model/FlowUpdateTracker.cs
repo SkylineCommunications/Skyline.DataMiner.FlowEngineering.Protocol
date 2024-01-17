@@ -8,7 +8,7 @@
 	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
 	using Skyline.DataMiner.Scripting;
 
-	public class FlowUpdateTracker
+	public sealed class FlowUpdateTracker : IDisposable
 	{
 		private readonly FlowUpdateTrackers _parent;
 		private readonly TaskCompletionSource<(bool, string)> _tcs = new TaskCompletionSource<(bool, string)>();
@@ -56,7 +56,7 @@
 			}
 			finally
 			{
-				_parent.Remove(ID);
+				_parent.Remove(this);
 			}
 		}
 
@@ -64,5 +64,20 @@
 		{
 			return Task.GetAwaiter();
 		}
+
+		#region IDisposable
+
+		~FlowUpdateTracker()
+		{
+			Dispose();
+		}
+
+		public void Dispose()
+		{
+			_parent.Remove(this);
+			GC.SuppressFinalize(this);
+		}
+
+		#endregion
 	}
 }

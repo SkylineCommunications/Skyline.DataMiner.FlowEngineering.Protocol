@@ -169,12 +169,10 @@
 
 			var unlinkedFlows = new List<Flow>();
 
-			if (ProvisionedFlows.TryGetValue(provisionedFlowId, out var provisionedFlow))
+			if (ProvisionedFlows.TryRemove(provisionedFlowId, out var provisionedFlow))
 			{
 				unlinkedFlows.AddRange(IncomingFlows.UnlinkFlowEngineeringFlows(provisionedFlowId));
 				unlinkedFlows.AddRange(OutgoingFlows.UnlinkFlowEngineeringFlows(provisionedFlowId));
-
-				ProvisionedFlows.Remove(provisionedFlow);
 
 				if (unlinkedFlows.Count > 0)
 				{

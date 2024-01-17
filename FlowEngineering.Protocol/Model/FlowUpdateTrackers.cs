@@ -1,11 +1,11 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
 	using System;
-	using System.Collections.Generic;
+	using System.Collections.Concurrent;
 
 	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
 
-	public class FlowUpdateTrackers : Dictionary<string, FlowUpdateTracker>
+	public class FlowUpdateTrackers : ConcurrentDictionary<string, FlowUpdateTracker>
 	{
 		private readonly FlowEngineeringManager _manager;
 
@@ -30,6 +30,16 @@
 			this[tracker.ID] = tracker;
 
 			return tracker;
+		}
+
+		public bool Remove(FlowUpdateTracker tracker)
+		{
+			if (tracker == null)
+			{
+				throw new ArgumentNullException(nameof(tracker));
+			}
+
+			return TryRemove(tracker.ID, out _);
 		}
 	}
 }
