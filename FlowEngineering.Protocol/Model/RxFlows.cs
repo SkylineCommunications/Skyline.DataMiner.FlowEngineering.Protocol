@@ -31,21 +31,6 @@
 			return flow;
 		}
 
-		public override IEnumerable<RxFlow> UnlinkFlowEngineeringFlows(Guid provisionedFlowId)
-		{
-			var provisionedFlowIdString = Convert.ToString(provisionedFlowId);
-			var linkedFlows = Values.Where(x => String.Equals(x.LinkedFlow, provisionedFlowIdString));
-
-			foreach (var linkedFlow in linkedFlows)
-			{
-				linkedFlow.FlowOwner = FlowOwner.LocalSystem;
-				linkedFlow.LinkedFlow = String.Empty;
-				linkedFlow.ExpectedBitrate = -1;
-
-				yield return linkedFlow;
-			}
-		}
-
 		public override void LoadTable(SLProtocol protocol)
 		{
 			var table = protocol.GetLocalElement()

@@ -3,8 +3,10 @@
 	using System;
 	using System.Collections.Concurrent;
 	using System.Collections.Generic;
+	using System.Linq;
 
 	using Skyline.DataMiner.FlowEngineering.Protocol;
+	using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
 	using Skyline.DataMiner.Scripting;
 
 	public abstract class Flows<T> : ConcurrentDictionary<string, T>
@@ -61,12 +63,33 @@
 			AddRange(newFlows);
 		}
 
+		public IEnumerable<T> UnlinkFlowEngineeringFlows(Guid provisionedFlowId)
+		{
+			var provisionedFlowIdString = Convert.ToString(provisionedFlowId);
+			var linkedFlows = Values.Where(x => String.Equals(x.LinkedFlow, provisionedFlowIdString)).ToList();
+
+			foreach (var linkedFlow in linkedFlows)
+			{
+				if (linkedFlow.IsPresent)
+				{
+					linkedFlow.FlowOwner = FlowOwner.LocalSystem;
+					linkedFlow.LinkedFlow = String.Empty;
+					linkedFlow.ExpectedBitrate = -1;
+				}
+				else
+				{
+					// flow was not present on the device, so row can be removed
+					Remove(linkedFlow);
+				}
+
+				yield return linkedFlow;
+			}
+		}
+
 		public abstract void LoadTable(SLProtocol protocol);
 
 		public abstract void UpdateTable(SLProtocol protocol, bool includeStatistics = true);
 
 		public abstract void UpdateStatistics(SLProtocol protocol);
-
-		public abstract IEnumerable<T> UnlinkFlowEngineeringFlows(Guid provisionedFlowId);
 	}
 }
