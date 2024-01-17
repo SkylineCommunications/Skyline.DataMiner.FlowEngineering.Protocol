@@ -87,6 +87,11 @@
 
 		public void RegisterNotPresentOnLocalSystem(T flow)
 		{
+			if (flow == null)
+			{
+				throw new ArgumentNullException(nameof(flow));
+			}
+
 			if (flow.FlowOwner == FlowOwner.FlowEngineering)
 			{
 				// change to not present, but keep the row
