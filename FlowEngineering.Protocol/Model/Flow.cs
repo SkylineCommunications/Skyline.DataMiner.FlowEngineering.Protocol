@@ -1,13 +1,15 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
-    using System;
-    using System.Collections.Generic;
+	using System;
+	using System.Collections.Generic;
 
-    using Skyline.DataMiner.FlowEngineering.Protocol;
-    using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
+	using Skyline.DataMiner.FlowEngineering.Protocol;
+	using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
 
-    public class Flow : IEquatable<Flow>
+	public class Flow : IEquatable<Flow>
 	{
+		private string _linkedFlow;
+
 		protected Flow(string instance)
 		{
 			if (String.IsNullOrWhiteSpace(instance))
@@ -38,7 +40,19 @@
 
 		public string Label { get; set; }
 
-		public string LinkedFlow { get; set; }
+		public string LinkedFlow
+		{
+			get => _linkedFlow;
+			set
+			{
+				if (!String.IsNullOrEmpty(value) && !Guid.TryParse(value, out _))
+				{
+					throw new ArgumentException($"{nameof(value)} should be either a valid GUID or an empty string.");
+				}
+
+				_linkedFlow = value;
+			}
+		}
 
 		public FlowOwner FlowOwner => !String.IsNullOrEmpty(LinkedFlow) ? FlowOwner.FlowEngineering : FlowOwner.LocalSystem;
 
