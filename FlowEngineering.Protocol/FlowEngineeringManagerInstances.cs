@@ -6,42 +6,58 @@
 	using Skyline.DataMiner.Scripting;
 
 	public class FlowEngineeringManagerInstances
-    {
-        private static readonly ConcurrentDictionary<string, FlowEngineeringManager> Instances = new ConcurrentDictionary<string, FlowEngineeringManager>();
+	{
+		private static readonly ConcurrentDictionary<string, FlowEngineeringManager> Instances = new ConcurrentDictionary<string, FlowEngineeringManager>();
 
-        public static FlowEngineeringManager GetInstance(SLProtocol protocol)
-        {
-            string key = GetKey(protocol);
+		public static FlowEngineeringManager GetInstance(SLProtocol protocol)
+		{
+			if (protocol == null)
+			{
+				throw new ArgumentNullException(nameof(protocol));
+			}
 
-            return Instances.GetOrAdd(key, k =>
-            {
-                var manager = new FlowEngineeringManager();
-                manager.LoadTables(protocol);
-                return manager;
-            });
-        }
+			string key = GetKey(protocol);
 
-        /// <summary>
-        /// Removes existing data, and returns a new instance.
-        /// </summary>
-        public static FlowEngineeringManager CreateNewInstance(SLProtocol protocol)
-        {
-            string key = GetKey(protocol);
-            Instances.TryRemove(key, out _);
-            return GetInstance(protocol);
-        }
+			return Instances.GetOrAdd(key, k =>
+			{
+				return new FlowEngineeringManager(k, protocol);
+			});
+		}
 
-        private static string GetKey(SLProtocol protocol)
-        {
-            if (protocol == null)
-                throw new ArgumentNullException(nameof(protocol));
+		/// <summary>
+		/// Removes existing data, and returns a new instance.
+		/// </summary>
+		public static FlowEngineeringManager CreateNewInstance(SLProtocol protocol)
+		{
+			if (protocol == null)
+			{
+				throw new ArgumentNullException(nameof(protocol));
+			}
 
-            if (protocol.DataMinerID < 0 || protocol.ElementID < 0)
-                throw new ArgumentException(nameof(protocol));
+			string key = GetKey(protocol);
+			Instances.TryRemove(key, out _);
+			return GetInstance(protocol);
+		}
 
-            string key = String.Join("/", protocol.DataMinerID, protocol.ElementID);
+		public static void RemoveInstance(FlowEngineeringManager instance)
+		{
+			if (instance == null)
+			{
+				throw new ArgumentNullException(nameof(instance));
+			}
 
-            return key;
-        }
-    }
+			Instances.TryRemove(instance.Key, out _);
+		}
+
+		private static string GetKey(SLProtocol protocol)
+		{
+			if (protocol == null)
+				throw new ArgumentNullException(nameof(protocol));
+
+			if (protocol.DataMinerID < 0 || protocol.ElementID < 0)
+				throw new ArgumentException(nameof(protocol));
+
+			return String.Join("/", protocol.DataMinerID, protocol.ElementID);
+		}
+	}
 }

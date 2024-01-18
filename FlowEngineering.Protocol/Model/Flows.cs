@@ -1,13 +1,15 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
 	using System;
+	using System.Collections.Concurrent;
 	using System.Collections.Generic;
+	using System.Linq;
 
 	using Skyline.DataMiner.FlowEngineering.Protocol;
+	using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
 	using Skyline.DataMiner.Scripting;
-	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
 
-	public abstract class Flows<T> : Dictionary<string, T>
+	public abstract class Flows<T> : ConcurrentDictionary<string, T>
 		where T : Flow
 	{
 		protected FlowEngineeringManager _manager;
@@ -24,7 +26,7 @@
 				throw new ArgumentNullException(nameof(flow));
 			}
 
-			Add(flow.Instance, flow);
+			TryAdd(flow.Instance, flow);
 		}
 
 		public void AddRange(IEnumerable<T> flows)
@@ -47,7 +49,7 @@
 				throw new ArgumentNullException(nameof(flow));
 			}
 
-			return Remove(flow.Instance);
+			return TryRemove(flow.Instance, out _);
 		}
 
 		public void ReplaceFlows(IEnumerable<T> newFlows)
@@ -61,14 +63,50 @@
 			AddRange(newFlows);
 		}
 
+		public IEnumerable<T> UnlinkFlowEngineeringFlows(Guid provisionedFlowId)
+		{
+			var provisionedFlowIdString = Convert.ToString(provisionedFlowId);
+			var linkedFlows = Values.Where(x => String.Equals(x.LinkedFlow, provisionedFlowIdString)).ToList();
+
+			foreach (var linkedFlow in linkedFlows)
+			{
+				if (linkedFlow.IsPresent)
+				{
+					linkedFlow.LinkedFlow = String.Empty;
+					linkedFlow.ExpectedBitrate = -1;
+				}
+				else
+				{
+					// flow was not present on the device, so row can be removed
+					Remove(linkedFlow);
+				}
+
+				yield return linkedFlow;
+			}
+		}
+
+		public void RegisterNotPresentOnLocalSystem(T flow)
+		{
+			if (flow == null)
+			{
+				throw new ArgumentNullException(nameof(flow));
+			}
+
+			if (flow.FlowOwner == FlowOwner.FlowEngineering)
+			{
+				// change to not present, but keep the row
+				flow.IsPresent = false;
+			}
+			else
+			{
+				Remove(flow);
+			}
+		}
+
 		public abstract void LoadTable(SLProtocol protocol);
 
 		public abstract void UpdateTable(SLProtocol protocol, bool includeStatistics = true);
 
 		public abstract void UpdateStatistics(SLProtocol protocol);
-
-		public abstract T RegisterFlowEngineeringFlow(FlowInfoMessage flowInfo, string instance, bool ignoreDestinationPort = false);
-
-		public abstract T UnregisterFlowEngineeringFlow(FlowInfoMessage flowInfo);
 	}
 }
