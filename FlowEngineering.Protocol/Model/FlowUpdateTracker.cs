@@ -23,7 +23,6 @@
 
 		public FlowInfoMessage FlowInfoMessage { get; }
 
-
 		public bool ResultReceived { get; private set; }
 
 		public string ID => FlowInfoMessage.Guid;
@@ -106,17 +105,7 @@
 
 				_tcs.SetResult((success, message));
 
-				var responseMessage = new FlowInfoResponseMessage()
-				{
-					ProvisionedFlowId = ProvisionedFlowId,
-					IsSuccess = success,
-					Message = message,
-				};
-
-				FlowInfoMessage.Reply(
-					protocol.SLNet.RawConnection,
-					responseMessage,
-					FlowInfoResponseMessage.Serializer);
+				FlowInfoMessage.ReplyResult(protocol, success, message);
 			}
 			finally
 			{
