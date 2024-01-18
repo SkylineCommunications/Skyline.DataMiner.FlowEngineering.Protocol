@@ -82,10 +82,7 @@
 			{
 				try
 				{
-					if (!ResultReceived)
-					{
-						SetFailed(protocol, message);
-					}
+					SetFailed(protocol, message);
 				}
 				finally
 				{
@@ -100,6 +97,11 @@
 		{
 			try
 			{
+				if (ResultReceived)
+				{
+					return;
+				}
+
 				ResultReceived = true;
 
 				_tcs.SetResult((success, message));
