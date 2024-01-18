@@ -14,21 +14,21 @@
 		private readonly FlowUpdateTrackers _parent;
 		private readonly TaskCompletionSource<(bool, string)> _tcs = new TaskCompletionSource<(bool, string)>();
 
-		internal FlowUpdateTracker(FlowUpdateTrackers parent, FlowInfoMessage flowInfoMessage, ProvisionedFlow provisionedFlow)
+		internal FlowUpdateTracker(FlowUpdateTrackers parent, FlowInfoMessage flowInfoMessage)
 		{
 			_parent = parent ?? throw new ArgumentNullException(nameof(parent));
 
 			FlowInfoMessage = flowInfoMessage ?? throw new ArgumentNullException(nameof(flowInfoMessage));
-			ProvisionedFlow = provisionedFlow ?? throw new ArgumentNullException(nameof(provisionedFlow));
 		}
 
 		public FlowInfoMessage FlowInfoMessage { get; }
 
-		public ProvisionedFlow ProvisionedFlow { get; }
 
 		public bool ResultReceived { get; private set; }
 
 		public string ID => FlowInfoMessage.Guid;
+
+		public Guid ProvisionedFlowId => FlowInfoMessage.ProvisionedFlowId;
 
 		public ActionType Action => FlowInfoMessage.ActionType;
 
@@ -108,7 +108,7 @@
 
 				var responseMessage = new FlowInfoResponseMessage()
 				{
-					ProvisionedFlowId = ProvisionedFlow.ID,
+					ProvisionedFlowId = ProvisionedFlowId,
 					IsSuccess = success,
 					Message = message,
 				};

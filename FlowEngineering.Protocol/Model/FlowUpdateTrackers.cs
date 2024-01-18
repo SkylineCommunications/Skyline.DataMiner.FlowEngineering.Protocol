@@ -15,6 +15,12 @@
 			_manager = manager;
 		}
 
+		public bool TryGet(Guid provisionedFlowId, out FlowUpdateTracker updateTracker)
+		{
+			updateTracker = Values.FirstOrDefault(x => x.ProvisionedFlowId == provisionedFlowId);
+			return updateTracker != null;
+		}
+
 		public bool TryGet(ProvisionedFlow provisionedFlow, out FlowUpdateTracker updateTracker)
 		{
 			if (provisionedFlow == null)
@@ -22,23 +28,17 @@
 				throw new ArgumentNullException(nameof(provisionedFlow));
 			}
 
-			updateTracker = Values.FirstOrDefault(x => x.ProvisionedFlow == provisionedFlow);
-			return updateTracker != null;
+			return TryGet(provisionedFlow.ID, out updateTracker);
 		}
 
-		public FlowUpdateTracker CreateTracker(FlowInfoMessage flowInfoMessage, ProvisionedFlow provisionedFlow)
+		public FlowUpdateTracker CreateTracker(FlowInfoMessage flowInfoMessage)
 		{
 			if (flowInfoMessage == null)
 			{
 				throw new ArgumentNullException(nameof(flowInfoMessage));
 			}
 
-			if (provisionedFlow == null)
-			{
-				throw new ArgumentNullException(nameof(provisionedFlow));
-			}
-
-			var tracker = new FlowUpdateTracker(this, flowInfoMessage, provisionedFlow);
+			var tracker = new FlowUpdateTracker(this, flowInfoMessage);
 			this[tracker.ID] = tracker;
 
 			return tracker;
