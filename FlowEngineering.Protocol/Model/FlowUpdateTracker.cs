@@ -3,6 +3,7 @@
 	using System;
 	using System.Runtime.CompilerServices;
 	using System.Threading.Tasks;
+	using System.Timers;
 
 	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Enums;
 	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
@@ -24,6 +25,8 @@
 		public FlowInfoMessage FlowInfoMessage { get; }
 
 		public ProvisionedFlow ProvisionedFlow { get; }
+
+		public bool ResultReceived { get; private set; }
 
 		public string ID => FlowInfoMessage.Guid;
 
@@ -66,10 +69,39 @@
 			SetResult(protocol, false, message);
 		}
 
+		public void SetTimeout(SLProtocol protocol, TimeSpan time, string message)
+		{
+			if (String.IsNullOrWhiteSpace(message))
+			{
+				throw new ArgumentException($"'{nameof(message)}' cannot be null or whitespace.", nameof(message));
+			}
+
+			var timer = new Timer(time.TotalMilliseconds);
+
+			timer.Elapsed += (s, e) =>
+			{
+				try
+				{
+					if (!ResultReceived)
+					{
+						SetFailed(protocol, message);
+					}
+				}
+				finally
+				{
+					timer.Dispose();
+				}
+			};
+
+			timer.Start();
+		}
+
 		private void SetResult(SLProtocol protocol, bool success, string message)
 		{
 			try
 			{
+				ResultReceived = true;
+
 				_tcs.SetResult((success, message));
 
 				var responseMessage = new FlowInfoResponseMessage()
