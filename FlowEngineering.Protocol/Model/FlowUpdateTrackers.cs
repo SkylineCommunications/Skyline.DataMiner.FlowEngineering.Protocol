@@ -15,10 +15,20 @@
 			_manager = manager;
 		}
 
+		public bool TryGet(Func<FlowUpdateTracker, bool> predicate, out FlowUpdateTracker updateTracker)
+		{
+			if (predicate == null)
+			{
+				throw new ArgumentNullException(nameof(predicate));
+			}
+
+			updateTracker = Values.FirstOrDefault(predicate);
+			return updateTracker != null;
+		}
+
 		public bool TryGet(Guid provisionedFlowId, out FlowUpdateTracker updateTracker)
 		{
-			updateTracker = Values.FirstOrDefault(x => x.ProvisionedFlowId == provisionedFlowId);
-			return updateTracker != null;
+			return TryGet(x => x.ProvisionedFlowId == provisionedFlowId, out updateTracker);
 		}
 
 		public bool TryGet(ProvisionedFlow provisionedFlow, out FlowUpdateTracker updateTracker)
