@@ -68,7 +68,7 @@
 			SetResult(protocol, false, message);
 		}
 
-		public void SetTimeout(SLProtocol protocol, TimeSpan time, string message)
+		public void AutoFailAfterTimeout(SLProtocol protocol, TimeSpan time, string message)
 		{
 			if (String.IsNullOrWhiteSpace(message))
 			{
