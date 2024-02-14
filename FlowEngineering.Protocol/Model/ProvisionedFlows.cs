@@ -159,7 +159,7 @@
 				throw new ArgumentNullException(nameof(provisionedFlow));
 			}
 
-			provisionedFlow.AddToTable(protocol);
+			provisionedFlow.SetOrAddRow(protocol);
 		}
 
 		public void RemoveFromTable(SLProtocol protocol, ProvisionedFlow provisionedFlow)
@@ -169,7 +169,7 @@
 				throw new ArgumentNullException(nameof(provisionedFlow));
 			}
 
-			provisionedFlow.RemoveFromTable(protocol);
+			provisionedFlow.RemoveRow(protocol);
 		}
 
 		public void RemoveFromTable(SLProtocol protocol, Guid provisionedFlowId)

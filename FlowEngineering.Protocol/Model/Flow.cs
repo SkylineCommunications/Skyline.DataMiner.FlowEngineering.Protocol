@@ -5,8 +5,9 @@
 
 	using Skyline.DataMiner.FlowEngineering.Protocol;
 	using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
+	using Skyline.DataMiner.Scripting;
 
-	public class Flow : IEquatable<Flow>
+	public abstract class Flow : IEquatable<Flow>
 	{
 		private string _linkedFlow;
 
@@ -63,6 +64,14 @@
 		/// </summary>
 		public object Tag { get; set; }
 
+		public abstract void SetOrAddRow(SLProtocol protocol, bool includeStatistics = true);
+
+		public abstract void RemoveRow(SLProtocol protocol);
+
+		public abstract QActionTableRow BuildRow(bool includeStatistics = true);
+
+		#region IEquatable
+
 		public override bool Equals(object obj)
 		{
 			return Equals(obj as Flow);
@@ -88,5 +97,7 @@
 		{
 			return !(left == right);
 		}
+
+		#endregion
 	}
 }

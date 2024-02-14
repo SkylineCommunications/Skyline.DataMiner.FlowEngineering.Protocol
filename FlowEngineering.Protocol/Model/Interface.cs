@@ -1,13 +1,13 @@
 ﻿namespace Skyline.DataMiner.FlowEngineering.Protocol.Model
 {
-    using System;
-    using System.Collections.Generic;
+	using System;
+	using System.Collections.Generic;
 
-    using Skyline.DataMiner.FlowEngineering.Protocol;
-    using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
-    using Skyline.DataMiner.Scripting;
+	using Skyline.DataMiner.FlowEngineering.Protocol;
+	using Skyline.DataMiner.FlowEngineering.Protocol.Enums;
+	using Skyline.DataMiner.Scripting;
 
-    public class Interface : IEquatable<Interface>
+	public class Interface : IEquatable<Interface>
 	{
 		public Interface(string index)
 		{
@@ -84,6 +84,51 @@
 			row[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableoperstatus] = (int)OperationalStatus;
 
 			protocol.SetRow(FleParameters.Fleinterfacesoverviewtable.tablePid, Index, row);
+		}
+
+		public void SetOrAddRow(SLProtocol protocol, bool includeStatistics = true)
+		{
+			var row = BuildRow(includeStatistics);
+			protocol.SetOrAddRow(FleParameters.Fleinterfacesoverviewtable.tablePid, row);
+		}
+
+		public void RemoveRow(SLProtocol protocol)
+		{
+			var key = Convert.ToString(Instance);
+			protocol.DeleteRow(FleParameters.Fleinterfacesoverviewtable.tablePid, key);
+		}
+
+		public QActionTableRow BuildRow(bool includeStatistics = true)
+		{
+			var row = new QActionTableRow(0, 21);
+
+			row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableindex] = Instance;
+			row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtabledescription] = Description;
+			row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtabletype] = (int)Type;
+			row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableadminstatus] = (int)AdminStatus;
+			row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableoperstatus] = (int)OperationalStatus;
+			row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtabledisplaykey] = DisplayKey;
+			row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtabledcfinterfaceid] = DcfInterfaceId;
+
+			if (includeStatistics)
+			{
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtablerxbitrate] = RxBitrate;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtablerxflows] = RxFlows;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtabletxbitrate] = TxBitrate;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtabletxflows] = TxFlows;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtablerxutilization] = RxUtilization;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtabletxutilization] = TxUtilization;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableexpectedrxbitrate] = RxExpectedBitrate;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableexpectedrxbitratestatus] = (int)RxExpectedBitrateStatus;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableexpectedrxflows] = RxExpectedFlows;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableexpectedrxflowsstatus] = (int)RxExpectedFlowsStatus;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableexpectedtxbitrate] = TxExpectedBitrate;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableexpectedtxbitratestatus] = (int)TxExpectedBitrateStatus;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableexpectedtxflows] = TxExpectedFlows;
+				row.Columns[FleParameters.Fleinterfacesoverviewtable.Idx.fleinterfacesoverviewtableexpectedtxflowsstatus] = (int)TxExpectedFlowsStatus;
+			}
+
+			return row;
 		}
 
 		public override bool Equals(object obj)

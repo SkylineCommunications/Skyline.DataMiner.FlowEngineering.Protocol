@@ -6,7 +6,6 @@
 	using Newtonsoft.Json;
 
 	using Skyline.DataMiner.ConnectorAPI.FlowEngineering.Info;
-	using Skyline.DataMiner.FlowEngineering.Protocol.Tools;
 	using Skyline.DataMiner.Scripting;
 
 	public class ProvisionedFlow : IEquatable<ProvisionedFlow>
@@ -91,26 +90,6 @@
 		/// </summary>
 		public object Tag { get; set; }
 
-		public void AddToTable(SLProtocol protocol)
-		{
-			var row = BuildRow();
-
-			if (protocol.Exists(FleParameters.Fleprovisionedflowstable.tablePid, row.Key))
-			{
-				protocol.SetRow(FleParameters.Fleprovisionedflowstable.tablePid, row.Key, (object[])row);
-			}
-			else
-			{
-				protocol.AddRow(FleParameters.Fleprovisionedflowstable.tablePid, (object[])row);
-			}
-		}
-
-		public void RemoveFromTable(SLProtocol protocol)
-		{
-			var key = Convert.ToString(ID);
-			protocol.DeleteRow(FleParameters.Fleprovisionedflowstable.tablePid, key);
-		}
-
 		public static ProvisionedFlow CreateFromFlowInfoMessage(FlowInfoMessage message)
 		{
 			if (message == null)
@@ -135,25 +114,35 @@
 			};
 		}
 
-		internal QActionRow BuildRow()
+		public void SetOrAddRow(SLProtocol protocol)
+		{
+			var row = BuildRow();
+			protocol.SetOrAddRow(FleParameters.Fleprovisionedflowstable.tablePid, row);
+		}
+
+		public void RemoveRow(SLProtocol protocol)
 		{
 			var key = Convert.ToString(ID);
+			protocol.DeleteRow(FleParameters.Fleprovisionedflowstable.tablePid, key);
+		}
 
-			var row = new QActionRow(key);
+		public QActionTableRow BuildRow()
+		{
+			var row = new QActionTableRow(0, 14);
 
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableid] = key;
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceid] = Convert.ToString(SourceID);
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationid] = Convert.ToString(DestinationID);
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfaceid] = IncomingDcfInterfaceID;
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfacedynamiclink] = IncomingDcfDynamicLink;
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfaceid] = OutgoingDcfInterfaceID;
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfacedynamiclink] = OutgoingDcfDynamicLink;
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionalsourceidentifier] = OptionalSourceIdentifier;
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionaldestinationidentifier] = OptionalDestinationIdentifier;
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationip] = DestinationIP;
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationport] = DestinationPort;
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceip] = SourceIP;
-			row[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablemetadata] = Metadata;
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableid] = Convert.ToString(ID);
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceid] = Convert.ToString(SourceID);
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationid] = Convert.ToString(DestinationID);
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfaceid] = IncomingDcfInterfaceID;
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableincomingdcfinterfacedynamiclink] = IncomingDcfDynamicLink;
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfaceid] = OutgoingDcfInterfaceID;
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoutgoingdcfinterfacedynamiclink] = OutgoingDcfDynamicLink;
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionalsourceidentifier] = OptionalSourceIdentifier;
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstableoptionaldestinationidentifier] = OptionalDestinationIdentifier;
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationip] = DestinationIP;
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstabledestinationport] = DestinationPort;
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablesourceip] = SourceIP;
+			row.Columns[FleParameters.Fleprovisionedflowstable.Idx.fleprovisionedflowstablemetadata] = Metadata;
 
 			return row;
 		}

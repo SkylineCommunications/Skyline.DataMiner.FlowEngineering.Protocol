@@ -133,7 +133,7 @@
 			var provisionedFlow = ProvisionedFlow.CreateFromFlowInfoMessage(message);
 			ProvisionedFlows[provisionedFlow.ID] = provisionedFlow;
 
-			provisionedFlow.AddToTable(protocol);
+			provisionedFlow.SetOrAddRow(protocol);
 
 			return provisionedFlow;
 		}
@@ -180,7 +180,7 @@
 				}
 				else
 				{
-					provisionedFlow.RemoveFromTable(protocol);
+					provisionedFlow.RemoveRow(protocol);
 				}
 			}
 
