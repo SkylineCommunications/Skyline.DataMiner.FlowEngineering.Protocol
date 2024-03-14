@@ -14,6 +14,9 @@
 		private readonly FlowUpdateTrackers _parent;
 		private readonly TaskCompletionSource<(bool, string)> _tcs = new TaskCompletionSource<(bool, string)>();
 
+		private bool incomingFlowSuccess = false;
+		private bool outgoingFlowSuccess = false;
+
 		internal FlowUpdateTracker(FlowUpdateTrackers parent, FlowInfoMessage flowInfoMessage)
 		{
 			_parent = parent ?? throw new ArgumentNullException(nameof(parent));
@@ -43,6 +46,10 @@
 			return Task.GetAwaiter();
 		}
 
+		/// <summary>
+		/// Reply to the FlowInfoMessage that configuring the flows was successful.
+		/// </summary>
+		/// <param name="protocol">The SLProtocol instance.</param>
 		public void SetSuccess(SLProtocol protocol)
 		{
 			if (protocol == null)
@@ -53,6 +60,51 @@
 			SetResult(protocol, true, String.Empty);
 		}
 
+		/// <summary>
+		/// Registers successful configuration of the incoming flow.
+		/// Responds with success to the FlowInfoMessage if configuring the outgoing flow was also successful, or if outgoing flow was not necessary.
+		/// </summary>
+		/// <param name="protocol">The SLProtocol instance.</param>
+		public void SetSuccessForIncomingFlow(SLProtocol protocol)
+		{
+			if (protocol == null)
+			{
+				throw new ArgumentNullException(nameof(protocol));
+			}
+
+			incomingFlowSuccess = true;
+
+			if (outgoingFlowSuccess || !FlowInfoMessage.IsOutgoing)
+			{
+				SetSuccess(protocol);
+			}
+		}
+
+		/// <summary>
+		/// Registers successful configuration of the outgoing flow.
+		/// Responds with success to the FlowInfoMessage if configuring the incoming flow was also successful, or if incoming flow was not necessary.
+		/// </summary>
+		/// <param name="protocol">The SLProtocol instance.</param>
+		public void SetSuccessForOutgoingFlow(SLProtocol protocol)
+		{
+			if (protocol == null)
+			{
+				throw new ArgumentNullException(nameof(protocol));
+			}
+
+			outgoingFlowSuccess = true;
+
+			if (incomingFlowSuccess || !FlowInfoMessage.IsIncoming)
+			{
+				SetSuccess(protocol);
+			}
+		}
+
+		/// <summary>
+		/// Reply to the FlowInfoMessage that configuring the flows has failed with the specified message.
+		/// </summary>
+		/// <param name="protocol">The SLProtocol instance.</param>
+		/// <param name="message">A message that describes what went wrong.</param>
 		public void SetFailed(SLProtocol protocol, string message)
 		{
 			if (protocol == null)
@@ -68,6 +120,12 @@
 			SetResult(protocol, false, message);
 		}
 
+		/// <summary>
+		/// Starts a timer that will automatically reply to the FlowInfoMessage with a fail after the specified timeout time if no other reply was sent yet.
+		/// </summary>
+		/// <param name="protocol">The SLProtocol instance.</param>
+		/// <param name="time">The duration after which the failure response should be sent.</param>
+		/// <param name="message">A message that describes what went wrong.</param>
 		public void AutoFailAfterTimeout(SLProtocol protocol, TimeSpan time, string message)
 		{
 			if (String.IsNullOrWhiteSpace(message))
